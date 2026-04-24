@@ -3,15 +3,15 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { hasLocale } from 'use-intl'
-import { Geist } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { routing } from '@/i18n/routing'
 import { Header } from '@/app/components/Header'
 import { Footer } from '@/app/components/Footer'
 import '../globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin', 'cyrillic'],
 })
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export default async function LocaleLayout({
   const messages = await getMessages()
 
   return (
-    <html lang={locale} className={`${geistSans.variable} h-full antialiased`}>
+    <html lang={locale} className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider messages={messages}>
           <Header />

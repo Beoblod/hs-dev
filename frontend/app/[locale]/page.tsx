@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
+import { ReviewsCarousel } from '@/app/components/ReviewsCarousel'
 
 export const metadata: Metadata = {
   title: 'HelloService — Ремонт телефонів та гаджетів у Києві',
@@ -98,6 +99,16 @@ export default async function HomePage({
             <BenefitCard icon={<ClockIcon />} title={t('benefit3Title')} text={t('benefit3Text')} />
             <BenefitCard icon={<PriceIcon />} title={t('benefit4Title')} text={t('benefit4Text')} />
           </div>
+        </div>
+      </section>
+
+      {/* ── Reviews ── */}
+      <section className="bg-[#f2f2f2]">
+        <div className="max-w-[1300px] mx-auto px-4 py-16">
+          <ReviewsCarousel
+            titleLabel={t('reviewsTitle')}
+            allLabel={t('reviewsAll')}
+          />
         </div>
       </section>
 
