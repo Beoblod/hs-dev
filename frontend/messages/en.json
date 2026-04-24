@@ -9,7 +9,10 @@
   },
   "remont": {
     "title": "Phone & Gadget Repair",
-    "chooseDevice": "Choose a device category"
+    "chooseDevice": "Choose a device category",
+    "ctaTitle": "Can't find your device?",
+    "ctaText": "Leave a request — we'll find the right technician for you",
+    "ctaButton": "Book repair"
   },
   "model": {
     "repairTypes": "Available services",
