@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directus } from '@/lib/directus'
 import { readItems } from '@directus/sdk'
@@ -17,7 +17,7 @@ export default async function RemontPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const t = useTranslations('remont')
+  const t = await getTranslations('remont')
 
   const categories = await directus.request(
     readItems('device_categories' as any, {

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directus } from '@/lib/directus'
 import { readItems } from '@directus/sdk'
@@ -166,7 +166,8 @@ export default async function RemontSlugPage({
   // ── Branch 2: Service page ────────────────────────────────────────────────
   const svc = await resolveService(slug)
   if (svc) {
-    return <ServiceView svc={svc} />
+    const t = await getTranslations('service')
+    return <ServiceView svc={svc} t={t} />
   }
 
   notFound()
@@ -207,8 +208,7 @@ function CategoryView({
 
 // ── Service view ──────────────────────────────────────────────────────────────
 
-function ServiceView({ svc }: { svc: ServiceData }) {
-  const t = useTranslations('service')
+function ServiceView({ svc, t }: { svc: ServiceData; t: (key: string) => string }) {
   return (
     <main className="max-w-2xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-semibold mb-2">

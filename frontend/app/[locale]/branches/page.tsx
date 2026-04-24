@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { directus } from '@/lib/directus'
 import { readItems } from '@directus/sdk'
 import { BranchCard } from '@/app/components/BranchCard'
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 }
 
 export default async function BranchesPage() {
-  const t = useTranslations('branches')
+  const t = await getTranslations('branches')
 
   const branches = await directus.request(
     readItems('branches' as any, {

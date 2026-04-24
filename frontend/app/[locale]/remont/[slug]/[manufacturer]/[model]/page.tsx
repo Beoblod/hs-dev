@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directus } from '@/lib/directus'
 import { readItems } from '@directus/sdk'
@@ -70,7 +70,7 @@ export default async function ModelPage({
   params: Promise<{ locale: string; slug: string; manufacturer: string; model: string }>
 }) {
   const { slug, manufacturer: mfrSlug, model: modelSlug } = await params
-  const t = useTranslations('model')
+  const t = await getTranslations('model')
 
   const model = await getModel(modelSlug, mfrSlug)
   if (!model) notFound()
