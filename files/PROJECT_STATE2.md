@@ -43,7 +43,7 @@
 - [x] 21 колекція створена (Phase 1 schema)
 - [x] PostgreSQL тригер `trg_device_models_novelty` на `device_models`
 - [x] Snapshot: `schema-snapshots/schema-phase1-complete.json` (312 KB)
-- [ ] Translations увімкнено для контентних колекцій
+- [ ] Translations — відкладено до Фази 5 (EN-поля порожні, UK вже в базових полях)
 
 ### Next.js
 - [ ] Проект ініціалізовано (`create-next-app`, App Router)
@@ -67,7 +67,7 @@
 ---
 
 ## В процесі
-- [ ] **Фаза 1:** Наповнення довідників + Directus Translations (ЗАРАЗ)
+- [ ] **Фаза 1:** Наповнення каталогу — manufacturers, device_models (~50), repair_types (ЗАРАЗ)
 
 ---
 
