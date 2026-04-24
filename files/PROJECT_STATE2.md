@@ -40,6 +40,9 @@
 - [x] Версія: directus/directus:11 (остання 11.x)
 - [x] Snapshot порожньої схеми: `schema-snapshots/schema-phase0-empty.json`
 - [x] Адмін-акаунт створено: `admin@helloservice.ua`
+- [x] 21 колекція створена (Phase 1 schema)
+- [x] PostgreSQL тригер `trg_device_models_novelty` на `device_models`
+- [x] Snapshot: `schema-snapshots/schema-phase1-complete.json` (312 KB)
 - [ ] Translations увімкнено для контентних колекцій
 
 ### Next.js
@@ -64,7 +67,7 @@
 ---
 
 ## В процесі
-- [ ] **Фаза 1:** Побудувати схему даних Directus (20 колекцій)
+- [ ] **Фаза 1:** Наповнення довідників + Directus Translations (ЗАРАЗ)
 
 ---
 
