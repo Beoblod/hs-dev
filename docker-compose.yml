@@ -1,94 +1,92 @@
-services:
-  postgres:
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - internal
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  directus:
-    image: directus/directus:11
-    restart: always
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      KEY: ${DIRECTUS_KEY}
-      SECRET: ${DIRECTUS_SECRET}
-      DB_CLIENT: pg
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: ${POSTGRES_DB}
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
-      PUBLIC_URL: https://${DOMAIN_CMS}
-      STORAGE_LOCATIONS: local
-      STORAGE_LOCAL_DRIVER: local
-      STORAGE_LOCAL_ROOT: /directus/uploads
-    volumes:
-      - directus_uploads:/directus/uploads
-      - directus_extensions:/directus/extensions
-    networks:
-      - internal
-    expose:
-      - "8055"
-
-  n8n:
-    image: n8nio/n8n:latest
-    restart: always
-    environment:
-      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
-      N8N_BASIC_AUTH_ACTIVE: "true"
-      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
-      WEBHOOK_URL: https://${DOMAIN_N8N}
-      GENERIC_TIMEZONE: Europe/Kyiv
-    volumes:
-      - n8n_data:/home/node/.n8n
-    networks:
-      - internal
-    expose:
-      - "5678"
-
-  nginx:
-    image: nginx:alpine
-    restart: always
-    depends_on:
-      - directus
-      - n8n
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d:ro
-      - ./ssl:/etc/nginx/ssl:ro
-      - nginx_logs:/var/log/nginx
-    networks:
-      - internal
-      - web
-
-volumes:
-  postgres_data:
-  directus_uploads:
-  directus_extensions:
-  n8n_data:
-  nginx_logs:
-
 networks:
   internal:
     driver: bridge
     internal: true
   web:
     driver: bridge
+services:
+  directus:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      DB_CLIENT: pg
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_HOST: postgres
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER}
+      KEY: ${DIRECTUS_KEY}
+      PUBLIC_URL: https://${DOMAIN_CMS}
+      SECRET: ${DIRECTUS_SECRET}
+      STORAGE_LOCAL_DRIVER: local
+      STORAGE_LOCAL_ROOT: /directus/uploads
+      STORAGE_LOCATIONS: local
+    expose:
+    - '8055'
+    image: directus/directus:11
+    networks:
+    - internal
+    restart: always
+    volumes:
+    - directus_uploads:/directus/uploads
+    - directus_extensions:/directus/extensions
+  n8n:
+    environment:
+      GENERIC_TIMEZONE: Europe/Kyiv
+      N8N_BASIC_AUTH_ACTIVE: 'true'
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      WEBHOOK_URL: https://${DOMAIN_N8N}
+    expose:
+    - '5678'
+    image: n8nio/n8n:latest
+    networks:
+    - internal
+    restart: always
+    volumes:
+    - n8n_data:/home/node/.n8n
+  nginx:
+    depends_on:
+    - directus
+    - n8n
+    image: nginx:alpine
+    networks:
+    - internal
+    - web
+    ports:
+    - 80:80
+    - 443:443
+    restart: always
+    volumes:
+    - ./nginx:/etc/nginx/conf.d:ro
+    - ./certbot/www:/var/www/certbot:ro
+    - ./certbot/letsencrypt:/etc/letsencrypt:ro
+    - nginx_logs:/var/log/nginx
+  postgres:
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+    healthcheck:
+      interval: 10s
+      retries: 5
+      test:
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      timeout: 5s
+    image: postgres:15-alpine
+    networks:
+    - internal
+    restart: always
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+volumes:
+  directus_extensions: null
+  directus_uploads: null
+  n8n_data: null
+  nginx_logs: null
+  postgres_data: null
