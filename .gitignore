@@ -137,3 +137,13 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Project
+.DS_Store
+~$*
+ssl/
+schema-before-migration.json
+schema-after-migration.json
+schema-phase1-complete.json
+tz_helloservice_v2.2.docx
+PROJECT_STATE2.md
