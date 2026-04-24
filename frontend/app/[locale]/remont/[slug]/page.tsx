@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { directus } from '@/lib/directus'
+import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
 
 // ── Types ────────────────────────────────────────────────────────────────────
