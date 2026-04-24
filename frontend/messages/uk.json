@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "HelloService — ремонт телефонів та гаджетів"
+  },
+  "remont": {
+    "title": "Ремонт телефонів та гаджетів",
+    "chooseDevice": "Оберіть категорію пристрою"
+  },
+  "model": {
+    "repairTypes": "Доступні послуги",
+    "noRepairs": "Послуги для цієї моделі ще не додано"
+  },
+  "service": {
+    "price": "Ціна",
+    "priceFrom": "від",
+    "noPrices": "Ціна уточнюється",
+    "order": "Замовити ремонт",
+    "diagFree": "Діагностика безкоштовно"
+  },
+  "branches": {
+    "title": "Де можна провести ремонт",
+    "filterCity": "Фільтр відділень по місту",
+    "allCities": "Всі міста",
+    "phone": "Телефон",
+    "address": "Адреса",
+    "hours": "Графік роботи",
+    "directionsWalk": "Пішки",
+    "directionsTransit": "Громадський транспорт",
+    "directionsCar": "Автівка"
+  },
+  "orderForm": {
+    "title": "Записатися на ремонт",
+    "contactTitle": "Контактні дані:",
+    "namePlaceholder": "Ваше ім'я",
+    "phonePlaceholder": "+38 (000) 000 00 00",
+    "deviceTitle": "Інформація про пристрій:",
+    "deviceTypePlaceholder": "Оберіть тип пристрою",
+    "modelPlaceholder": "Марка і модель вашого пристрою",
+    "problemTitle": "Опишіть яка проблема виникла з вашим пристроєм:",
+    "commentPlaceholder": "Ваш коментар",
+    "attachPhoto": "Прикріпити фото поломки",
+    "serviceTitle": "Варіанти надання послуг:",
+    "optionBranch": "Записатися на відділення",
+    "optionNovaPoshta": "Доставка Новою Поштою",
+    "optionCourier": "Доставка кур'єром (Київ)",
+    "confirmTitle": "Підтвердження:",
+    "confirmTerms": "Я погоджуюся з",
+    "confirmTermsLink": "умовами надання послуг",
+    "confirmPrivacy": "Я ознайомився з",
+    "confirmPrivacyLink": "політикою конфіденційності",
+    "confirmNoCall": "Мені не потрібно телефонувати, адже я не потребую консультації",
+    "submit": "Записатися на ремонт",
+    "sending": "Надсилаємо...",
+    "successTitle": "Заявку прийнято!",
+    "successText": "Ми зв'яжемося з вами найближчим часом.",
+    "errorText": "Помилка. Спробуйте ще раз або зателефонуйте нам."
+  }
+}

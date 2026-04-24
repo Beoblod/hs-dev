@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "HelloService — Phone & Gadget Repair"
+  },
+  "remont": {
+    "title": "Phone & Gadget Repair",
+    "chooseDevice": "Choose a device category"
+  },
+  "model": {
+    "repairTypes": "Available services",
+    "noRepairs": "No services available for this model yet"
+  },
+  "service": {
+    "price": "Price",
+    "priceFrom": "from",
+    "noPrices": "Price on request",
+    "order": "Order repair",
+    "diagFree": "Free diagnostics"
+  },
+  "branches": {
+    "title": "Where to get a repair",
+    "filterCity": "Filter by city",
+    "allCities": "All cities",
+    "phone": "Phone",
+    "address": "Address",
+    "hours": "Working hours",
+    "directionsWalk": "Walking",
+    "directionsTransit": "Public transit",
+    "directionsCar": "By car"
+  },
+  "orderForm": {
+    "title": "Book a repair",
+    "contactTitle": "Contact details:",
+    "namePlaceholder": "Your name",
+    "phonePlaceholder": "+38 (000) 000 00 00",
+    "deviceTitle": "Device information:",
+    "deviceTypePlaceholder": "Select device type",
+    "modelPlaceholder": "Brand and model of your device",
+    "problemTitle": "Describe the problem with your device:",
+    "commentPlaceholder": "Your comment",
+    "attachPhoto": "Attach a photo of the issue",
+    "serviceTitle": "Service options:",
+    "optionBranch": "Visit a branch",
+    "optionNovaPoshta": "Nova Poshta delivery",
+    "optionCourier": "Courier delivery (Kyiv)",
+    "confirmTitle": "Confirmation:",
+    "confirmTerms": "I agree to the",
+    "confirmTermsLink": "terms of service",
+    "confirmPrivacy": "I have read the",
+    "confirmPrivacyLink": "privacy policy",
+    "confirmNoCall": "No need to call me, I don't need a consultation",
+    "submit": "Book a repair",
+    "sending": "Sending...",
+    "successTitle": "Request received!",
+    "successText": "We will contact you shortly.",
+    "errorText": "Error. Please try again or call us."
+  }
+}

@@ -8,7 +8,7 @@
 - **Проект:** Сервісний центр HelloService
 - **ТЗ:** `tz_helloservice_v2.2.docx` (у цьому ж репозиторії)
 - **Поточна фаза:** 2 — Next.js фронтенд
-- **Останнє оновлення:** 2026-04-24
+- **Останнє оновлення:** 2026-04-24 (сесія 3)
 
 ## Сервери
 | Роль | Сервер | Деталі |
@@ -47,10 +47,27 @@
 - [x] Роль `Редактор даних` — CRUD на всі 21 колекцію, без доступу до схеми
 - [ ] Translations — відкладено до Фази 5 (EN-поля порожні, UK вже в базових полях)
 
-### Next.js
-- [ ] Проект ініціалізовано (`create-next-app`, App Router)
-- [ ] Підключено до Directus SDK
-- [ ] `next-intl` встановлено (uk default, en — Фаза 5)
+### Next.js (`frontend/`)
+- [x] Проект ініціалізовано (`create-next-app`, Next.js 16, App Router, TypeScript, Tailwind 4)
+- [x] Підключено до Directus SDK (`@directus/sdk` v21, `lib/directus.ts`)
+- [x] `next-intl` v4 встановлено: `proxy.ts`, `i18n/routing.ts`, `i18n/request.ts`, `i18n/navigation.ts`
+- [x] Локалі: uk (default, без префіксу), en (`/en/`)
+- [x] Локалізовані pathnames: `/remont` (uk) ↔ `/repair` (en), `/viddilennya` (uk) ↔ `/branches` (en)
+- [x] `app/[locale]/layout.tsx` — root layout з `NextIntlClientProvider`
+- [x] `app/[locale]/page.tsx` — home page
+- [x] `app/[locale]/remont/page.tsx` — список категорій з Directus
+- [x] `app/[locale]/remont/[slug]/page.tsx` — catch-all: категорія АБО сторінка послуги
+- [x] `app/[locale]/remont/[slug]/[manufacturer]/page.tsx` — список моделей виробника
+- [x] `app/[locale]/remont/[slug]/[manufacturer]/[model]/page.tsx` — сторінка моделі з типами ремонту
+- [x] `app/[locale]/branches/page.tsx` — відділення + форма заявки
+- [x] `components/BranchCard.tsx` — картка відділення (по Figma дизайну)
+- [x] `components/OrderForm.tsx` — форма заявки (Client Component, POST → /api/leads)
+- [x] `app/api/leads/route.ts` — запис у Directus `leads` + n8n webhook (best-effort)
+- [x] `lib/directus-server.ts` — server-side Directus client зі static token
+- [x] `messages/uk.json` + `messages/en.json` — всі i18n ключі
+- [x] `device_categories.slug` = `telefony`, `slug_en` = `phones`
+- [ ] XML Sitemap, schema.org, canonical, breadcrumbs
+- [ ] Deploy → `dev.helloservice.ua`
 
 ---
 
@@ -75,6 +92,10 @@
 - HTTPS: Let's Encrypt, авторенювання cron щопонеділка
 - Роль `Редактор даних`: CRUD на 21 колекцію, без схеми (Directus 11 Policy API)
 - Snapshot: `schema-snapshots/schema-phase1-seeded.json`
+- Колекція `branches` додана (Phase 2): address, phone, working_hours, directions_url, sort
+- Колекція `leads` додана (Phase 2): client_name, client_phone, device_type, device_model, problem_description, service_option, no_call, status, source_url
+- Роль `hs_nextjs_svc` (service account): write-only на `leads`, read-only на публічні колекції
+- n8n workflow `HelloService Leads`: Webhook → Telegram (hsleads_bot → Filip), статус: ACTIVE
 
 ---
 
