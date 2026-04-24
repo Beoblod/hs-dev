@@ -15,11 +15,9 @@ type DeviceModel = {
 }
 
 type RepairType = {
-  repair_types_id: {
-    id: string
-    name: string
-    slug: string
-  }
+  id: string
+  name: string
+  slug: string
 }
 
 async function getModel(
@@ -52,10 +50,19 @@ async function getCategoryId(slug: string): Promise<number | null> {
 }
 
 async function getRepairTypes(categoryId: number): Promise<RepairType[]> {
-  return directus.request(
+  const junction = await directus.request(
     readItems('repair_types_categories' as any, {
       filter: { device_categories_id: { _eq: categoryId } },
-      fields: ['repair_types_id.id', 'repair_types_id.name', 'repair_types_id.slug'],
+      fields: ['repair_types_id'],
+      limit: -1,
+    })
+  ) as { repair_types_id: string }[]
+  const ids = junction.map((r) => r.repair_types_id).filter(Boolean)
+  if (!ids.length) return []
+  return directus.request(
+    readItems('repair_types' as any, {
+      filter: { id: { _in: ids }, is_active: { _eq: true } },
+      fields: ['id', 'name', 'slug'],
     })
   ) as Promise<RepairType[]>
 }
@@ -110,13 +117,13 @@ export default async function ModelPage({
         ) : (
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {repairTypes.map((rt) => (
-              <li key={rt.repair_types_id.id}>
+              <li key={rt.id}>
                 <Link
-                  href={`/remont/${rt.repair_types_id.slug}-${modelSlug}` as any}
+                  href={`/remont/${rt.slug}-${modelSlug}` as any}
                   className="group flex items-center justify-between bg-white rounded-lg px-6 py-5 hover:shadow-md transition-shadow"
                 >
                   <span className="text-[15px] font-light text-[#1a1a1a] group-hover:text-[#24b383] transition-colors">
-                    {rt.repair_types_id.name}
+                    {rt.name}
                   </span>
                   <span className="text-zinc-300 group-hover:text-[#24b383] transition-colors text-xl">›</span>
                 </Link>

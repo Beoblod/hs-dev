@@ -58,17 +58,22 @@ async function getCategory(slug: string, locale: string): Promise<Category | nul
 }
 
 async function getManufacturers(categoryId: number): Promise<Manufacturer[]> {
-  const rows = await directus.request(
+  const junction = await directus.request(
     readItems('manufacturers_categories' as any, {
       filter: { device_categories_id: { _eq: categoryId } },
-      fields: [
-        'manufacturers_id.id',
-        'manufacturers_id.name',
-        'manufacturers_id.slug',
-      ],
+      fields: ['manufacturers_id'],
+      limit: -1,
     })
-  ) as { manufacturers_id: Manufacturer }[]
-  return rows.map((r) => r.manufacturers_id).sort((a, b) => a.name.localeCompare(b.name))
+  ) as { manufacturers_id: string }[]
+  const ids = junction.map((r) => r.manufacturers_id).filter(Boolean)
+  if (!ids.length) return []
+  const rows = await directus.request(
+    readItems('manufacturers' as any, {
+      filter: { id: { _in: ids }, is_active: { _eq: true } },
+      fields: ['id', 'name', 'slug'],
+    })
+  ) as Manufacturer[]
+  return rows.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 async function resolveService(slug: string): Promise<ServiceData | null> {
