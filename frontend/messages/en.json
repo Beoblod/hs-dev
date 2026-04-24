@@ -5,7 +5,24 @@
     "cta": "Book repair"
   },
   "home": {
-    "title": "HelloService — Phone & Gadget Repair"
+    "title": "HelloService — Phone & Gadget Repair",
+    "heroLabel": "Service center in Kyiv",
+    "heroTitle": "Phone &\nGadget Repair",
+    "heroSubtitle": "Fast, quality, with warranty.\nFree diagnostics.",
+    "heroCta": "Book a repair",
+    "heroSecondary": "All services",
+    "benefitsTitle": "Why choose us",
+    "benefit1Title": "Free diagnostics",
+    "benefit1Text": "We inspect your device and identify the issue at no charge",
+    "benefit2Title": "Work guarantee",
+    "benefit2Text": "We provide an official warranty on all completed repairs",
+    "benefit3Title": "Fast turnaround",
+    "benefit3Text": "Most repairs are completed on the same day",
+    "benefit4Title": "Honest pricing",
+    "benefit4Text": "We quote the price before starting — no hidden fees",
+    "ctaTitle": "Not sure what's broken?",
+    "ctaText": "Leave a request — our technician will diagnose your device for free",
+    "ctaButton": "Book now"
   },
   "remont": {
     "title": "Phone & Gadget Repair",
