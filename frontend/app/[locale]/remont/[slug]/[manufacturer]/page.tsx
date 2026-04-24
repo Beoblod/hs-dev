@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
+import { Breadcrumb } from '@/app/components/Breadcrumb'
 
 type Category = {
   id: number
@@ -103,33 +104,44 @@ export default async function ManufacturerPage({
   }, {})
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-semibold mb-8">
-        Ремонт {mfr.name} {cat.name}
-      </h1>
+    <div className="bg-[#f2f2f2] min-h-screen">
+      <div className="max-w-[1300px] mx-auto px-4 py-16">
+        <Breadcrumb crumbs={[
+          { label: 'Ремонт', href: '/remont' },
+          { label: cat.name, href: `/remont/${slug}` as any },
+          { label: mfr.name },
+        ]} />
 
-      {Object.entries(groups).map(([line, lineModels]) => (
-        <section key={line} className="mb-10">
-          {line && (
-            <h2 className="text-xl font-medium mb-4 text-zinc-700">{line}</h2>
-          )}
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {lineModels.map((model) => (
-              <li key={model.id}>
-                <Link
-                  href={{
-                    pathname: '/remont/[slug]/[manufacturer]/[model]',
-                    params: { slug, manufacturer: mfrSlug, model: model.slug },
-                  }}
-                  className="block rounded-xl border border-zinc-200 p-4 text-center text-sm font-medium hover:border-zinc-400 hover:bg-zinc-50 transition-colors"
-                >
-                  {model.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
-    </main>
+        <h1 className="text-[40px] font-light text-[#1a1a1a] leading-tight mb-12">
+          Ремонт {mfr.name} {cat.name}
+        </h1>
+
+        {Object.entries(groups).map(([line, lineModels]) => (
+          <section key={line} className="mb-12">
+            {line && (
+              <h2 className="text-[20px] font-light text-zinc-500 mb-4">{line}</h2>
+            )}
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {lineModels.map((model) => (
+                <li key={model.id}>
+                  <Link
+                    href={{
+                      pathname: '/remont/[slug]/[manufacturer]/[model]',
+                      params: { slug, manufacturer: mfrSlug, model: model.slug },
+                    }}
+                    className="group flex items-center justify-between bg-white rounded-lg px-5 py-4 hover:shadow-md transition-shadow"
+                  >
+                    <span className="text-[15px] font-light text-[#1a1a1a] group-hover:text-[#24b383] transition-colors">
+                      {model.name}
+                    </span>
+                    <span className="text-zinc-300 group-hover:text-[#24b383] transition-colors text-lg">›</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
   )
 }

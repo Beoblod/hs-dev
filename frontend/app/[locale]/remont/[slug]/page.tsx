@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
+import { Breadcrumb } from '@/app/components/Breadcrumb'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -185,24 +186,34 @@ function CategoryView({
   slug: string
 }) {
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-semibold mb-8">{cat.h1_text}</h1>
-      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        {manufacturers.map((mfr) => (
-          <li key={mfr.id}>
-            <Link
-              href={{
-                pathname: '/remont/[slug]/[manufacturer]',
-                params: { slug, manufacturer: mfr.slug },
-              }}
-              className="block rounded-xl border border-zinc-200 p-6 text-center font-medium hover:border-zinc-400 hover:bg-zinc-50 transition-colors"
-            >
-              {mfr.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <div className="bg-[#f2f2f2] min-h-screen">
+      <div className="max-w-[1300px] mx-auto px-4 py-16">
+        <Breadcrumb crumbs={[
+          { label: 'Ремонт', href: '/remont' },
+          { label: cat.name },
+        ]} />
+        <h1 className="text-[40px] font-light text-[#1a1a1a] leading-tight mb-12">
+          {cat.h1_text || cat.name}
+        </h1>
+        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {manufacturers.map((mfr) => (
+            <li key={mfr.id}>
+              <Link
+                href={{
+                  pathname: '/remont/[slug]/[manufacturer]',
+                  params: { slug, manufacturer: mfr.slug },
+                }}
+                className="group flex flex-col items-center justify-center gap-3 bg-white rounded-lg p-8 hover:shadow-md transition-shadow min-h-[120px]"
+              >
+                <span className="text-[17px] font-light text-[#1a1a1a] group-hover:text-[#24b383] transition-colors">
+                  {mfr.name}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   )
 }
 
@@ -210,29 +221,48 @@ function CategoryView({
 
 function ServiceView({ svc, t }: { svc: ServiceData; t: (key: string) => string }) {
   return (
-    <main className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-semibold mb-2">
-        {svc.repairType.name} {svc.model.name}
-      </h1>
-      <p className="text-zinc-500 mb-8">{t('diagFree')}</p>
+    <div className="bg-[#f2f2f2] min-h-screen">
+      <div className="max-w-[1300px] mx-auto px-4 py-16">
+        <Breadcrumb crumbs={[
+          { label: 'Ремонт', href: '/remont' },
+          { label: `${svc.repairType.name} ${svc.model.name}` },
+        ]} />
 
-      <div className="rounded-xl border border-zinc-200 p-6 mb-8">
-        <p className="text-sm text-zinc-500 mb-1">{t('price')}</p>
-        {svc.price !== null ? (
-          <p className="text-3xl font-bold">
-            {t('priceFrom')} {svc.price.toLocaleString('uk-UA')} ₴
-          </p>
-        ) : (
-          <p className="text-xl text-zinc-400">{t('noPrices')}</p>
-        )}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Left: title + price */}
+          <div>
+            <h1 className="text-[40px] font-light text-[#1a1a1a] leading-tight mb-3">
+              {svc.repairType.name}
+            </h1>
+            <p className="text-[20px] font-light text-zinc-500 mb-8">{svc.model.name}</p>
+
+            <div className="bg-white rounded-lg p-8 mb-6">
+              <p className="text-[13px] font-light text-zinc-400 uppercase tracking-wider mb-2">
+                {t('price')}
+              </p>
+              {svc.price !== null ? (
+                <p className="text-[40px] font-light text-[#1a1a1a]">
+                  <span className="text-[20px] text-zinc-400 mr-2">{t('priceFrom')}</span>
+                  {svc.price.toLocaleString('uk-UA')} ₴
+                </p>
+              ) : (
+                <p className="text-[24px] font-light text-zinc-400">{t('noPrices')}</p>
+              )}
+            </div>
+
+            <p className="text-[14px] font-light text-zinc-500 mb-6">✓ {t('diagFree')}</p>
+
+            <div className="p-1 bg-[#c8ece0] rounded">
+              <Link
+                href="/branches"
+                className="flex items-center justify-center w-full h-[63px] bg-[#24b383] rounded text-white text-[18px] font-medium hover:bg-[#1fa070] transition-colors"
+              >
+                {t('order')}
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <button
-        disabled
-        className="w-full rounded-full bg-zinc-900 text-white py-4 text-lg font-medium opacity-50 cursor-not-allowed"
-      >
-        {t('order')}
-      </button>
-    </main>
+    </div>
   )
 }

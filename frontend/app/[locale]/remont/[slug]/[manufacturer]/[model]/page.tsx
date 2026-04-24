@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
+import { Breadcrumb } from '@/app/components/Breadcrumb'
 
 type DeviceModel = {
   id: string
@@ -77,29 +78,52 @@ export default async function ModelPage({
 
   const repairTypes = await getRepairTypes(model.category_id.id)
 
+  const catSlug = model.category_id.slug
+
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-semibold mb-8">Ремонт {model.name}</h1>
+    <div className="bg-[#f2f2f2] min-h-screen">
+      <div className="max-w-[1300px] mx-auto px-4 py-16">
+        <Breadcrumb crumbs={[
+          { label: 'Ремонт', href: '/remont' },
+          { label: catSlug, href: `/remont/${catSlug}` as any },
+          { label: mfrSlug, href: `/remont/${catSlug}/${mfrSlug}` as any },
+          { label: model.name },
+        ]} />
 
-      <h2 className="text-xl font-medium mb-4 text-zinc-700">{t('repairTypes')}</h2>
+        <h1 className="text-[40px] font-light text-[#1a1a1a] leading-tight mb-3">
+          Ремонт {model.name}
+        </h1>
+        <p className="text-[16px] font-light text-zinc-500 mb-12">{t('repairTypes')}</p>
 
-      {repairTypes.length === 0 ? (
-        <p className="text-zinc-500">{t('noRepairs')}</p>
-      ) : (
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {repairTypes.map((rt) => (
-            <li key={rt.repair_types_id.id}>
-              <Link
-                href={`/remont/${rt.repair_types_id.slug}-${modelSlug}` as any}
-                className="flex items-center justify-between rounded-xl border border-zinc-200 px-5 py-4 font-medium hover:border-zinc-400 hover:bg-zinc-50 transition-colors"
-              >
-                <span>{rt.repair_types_id.name}</span>
-                <span className="text-zinc-400 text-sm">→</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
+        {repairTypes.length === 0 ? (
+          <p className="text-[16px] font-light text-zinc-400">{t('noRepairs')}</p>
+        ) : (
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {repairTypes.map((rt) => (
+              <li key={rt.repair_types_id.id}>
+                <Link
+                  href={`/remont/${rt.repair_types_id.slug}-${modelSlug}` as any}
+                  className="group flex items-center justify-between bg-white rounded-lg px-6 py-5 hover:shadow-md transition-shadow"
+                >
+                  <span className="text-[15px] font-light text-[#1a1a1a] group-hover:text-[#24b383] transition-colors">
+                    {rt.repair_types_id.name}
+                  </span>
+                  <span className="text-zinc-300 group-hover:text-[#24b383] transition-colors text-xl">›</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="mt-12 p-1 bg-[#c8ece0] rounded max-w-sm">
+          <Link
+            href="/branches"
+            className="flex items-center justify-center w-full h-[56px] bg-[#24b383] rounded text-white text-[16px] font-medium hover:bg-[#1fa070] transition-colors"
+          >
+            Записатися на ремонт
+          </Link>
+        </div>
+      </div>
+    </div>
   )
 }
