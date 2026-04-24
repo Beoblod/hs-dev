@@ -12,7 +12,6 @@ type DeviceModel = {
   slug: string
   brand_line: string | null
   is_premium: boolean
-  category_id: { id: number; slug: string; slug_en: string }
 }
 
 type RepairType = {
@@ -34,11 +33,22 @@ async function getModel(
         manufacturer_id: { slug: { _eq: mfrSlug } },
         is_active: { _eq: true },
       },
-      fields: ['id', 'name', 'slug', 'brand_line', 'is_premium', 'category_id.id', 'category_id.slug', 'category_id.slug_en'],
+      fields: ['id', 'name', 'slug', 'brand_line', 'is_premium'],
       limit: 1,
     })
   ) as DeviceModel[]
   return rows[0] ?? null
+}
+
+async function getCategoryId(slug: string): Promise<number | null> {
+  const rows = await directus.request(
+    readItems('device_categories' as any, {
+      filter: { slug: { _eq: slug }, is_active: { _eq: true } },
+      fields: ['id'],
+      limit: 1,
+    })
+  ) as { id: number }[]
+  return rows[0]?.id ?? null
 }
 
 async function getRepairTypes(categoryId: number): Promise<RepairType[]> {
@@ -46,7 +56,6 @@ async function getRepairTypes(categoryId: number): Promise<RepairType[]> {
     readItems('repair_types_categories' as any, {
       filter: { device_categories_id: { _eq: categoryId } },
       fields: ['repair_types_id.id', 'repair_types_id.name', 'repair_types_id.slug'],
-      sort: ['repair_types_id.sort'],
     })
   ) as Promise<RepairType[]>
 }
@@ -70,15 +79,16 @@ export default async function ModelPage({
 }: {
   params: Promise<{ locale: string; slug: string; manufacturer: string; model: string }>
 }) {
-  const { slug, manufacturer: mfrSlug, model: modelSlug } = await params
+  const { slug: catSlug, manufacturer: mfrSlug, model: modelSlug } = await params
   const t = await getTranslations('model')
 
-  const model = await getModel(modelSlug, mfrSlug)
-  if (!model) notFound()
+  const [model, categoryId] = await Promise.all([
+    getModel(modelSlug, mfrSlug),
+    getCategoryId(catSlug),
+  ])
+  if (!model || !categoryId) notFound()
 
-  const repairTypes = await getRepairTypes(model.category_id.id)
-
-  const catSlug = model.category_id.slug
+  const repairTypes = await getRepairTypes(categoryId)
 
   return (
     <div className="bg-[#f2f2f2] min-h-screen">

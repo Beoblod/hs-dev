@@ -58,8 +58,8 @@ async function getModels(categoryId: number, manufacturerId: string): Promise<De
         manufacturer_id: { _eq: manufacturerId },
         is_active: { _eq: true },
       },
-      fields: ['id', 'name', 'slug', 'brand_line', 'is_premium', 'sort'],
-      sort: ['sort', 'name'],
+      fields: ['id', 'name', 'slug', 'brand_line', 'is_premium'],
+      sort: ['name'],
     })
   ) as Promise<DeviceModel[]>
 }

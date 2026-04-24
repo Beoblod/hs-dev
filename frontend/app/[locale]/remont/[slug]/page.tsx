@@ -65,12 +65,10 @@ async function getManufacturers(categoryId: number): Promise<Manufacturer[]> {
         'manufacturers_id.id',
         'manufacturers_id.name',
         'manufacturers_id.slug',
-        'manufacturers_id.sort_order',
       ],
-      sort: ['manufacturers_id.sort_order'],
     })
   ) as { manufacturers_id: Manufacturer }[]
-  return rows.map((r) => r.manufacturers_id)
+  return rows.map((r) => r.manufacturers_id).sort((a, b) => a.name.localeCompare(b.name))
 }
 
 async function resolveService(slug: string): Promise<ServiceData | null> {
