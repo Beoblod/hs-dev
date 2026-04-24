@@ -7,7 +7,7 @@
 ## Meta
 - **Проект:** Сервісний центр HelloService
 - **ТЗ:** `tz_helloservice_v2.2.docx` (у цьому ж репозиторії)
-- **Поточна фаза:** 1 — Схема даних Directus
+- **Поточна фаза:** 2 — Next.js фронтенд
 - **Останнє оновлення:** 2026-04-24
 
 ## Сервери
@@ -28,8 +28,9 @@
 - [x] Docker + Docker Compose встановлено
 - [x] `/root/helloservice/` створено (ubuntu user відсутній → використовуємо root)
 - [x] `docker-compose.yml` розгорнуто (4 сервіси: postgres, directus, n8n, nginx)
-- [x] n8n доступний: `http://n8n.helloservice.ua` (через nginx, port 80)
-- [x] Directus доступний: `http://cms.helloservice.ua` (через nginx, port 80)
+- [x] n8n доступний: `https://n8n.helloservice.ua` ✓ SSL
+- [x] Directus доступний: `https://cms.helloservice.ua` ✓ SSL
+- [x] HTTPS (Let's Encrypt) — сертифікат до 2026-07-23, авторенювання щопонеділка
 - [x] PostgreSQL доступний лише локально (internal Docker network)
 - [x] Nginx налаштовано як reverse proxy (internal + web networks)
 - [x] `.env` у `.gitignore`, `.env.example` є у репозиторії
@@ -43,6 +44,7 @@
 - [x] 21 колекція створена (Phase 1 schema)
 - [x] PostgreSQL тригер `trg_device_models_novelty` на `device_models`
 - [x] Snapshot: `schema-snapshots/schema-phase1-complete.json` (312 KB)
+- [x] Роль `Редактор даних` — CRUD на всі 21 колекцію, без доступу до схеми
 - [ ] Translations — відкладено до Фази 5 (EN-поля порожні, UK вже в базових полях)
 
 ### Next.js
@@ -62,28 +64,22 @@
 - `.env` (chmod 600) з безпечними credentials + `.env.example` у git
 - `nginx/default.conf`: reverse proxy для cms / n8n / dev + default reject
 - `schema-snapshots/schema-phase0-empty.json` — порожня базова схема
-- git init, гілка `main`, 2 коміти
+- git init, гілка `main`; репо: github.com/Beoblod/hs-dev
+
+### Фаза 1 — Схема даних Directus ✓
+- 21 колекція через Directus API (всі без помилок)
+- PostgreSQL тригер `trg_device_models_novelty` для `novelty_markup_coefficient`
+- Довідники: 5 рівнів ризику, 5 типів якості, 5 категорій пристроїв, 5 ставок гарантії
+- Каталог: 6 виробників, 57 моделей (Apple/Samsung/Xiaomi/Google/Sony/Huawei)
+- 10 типів ремонту + M2M зв'язки (18 mfr↔cat, 34 repair↔cat) через PostgreSQL
+- HTTPS: Let's Encrypt, авторенювання cron щопонеділка
+- Роль `Редактор даних`: CRUD на 21 колекцію, без схеми (Directus 11 Policy API)
+- Snapshot: `schema-snapshots/schema-phase1-seeded.json`
 
 ---
 
 ## В процесі
-- [ ] **Фаза 1:** Наповнення каталогу — manufacturers, device_models (~50), repair_types (ЗАРАЗ)
-
----
-
-## Наступні кроки
-
-### Фаза 1 — Схема даних Directus
-1. Довідники: `part_risk_levels`, `part_quality_types`, `device_categories`, `warranty_reserves`
-2. Каталог: `manufacturers`, `manufacturers_categories`, `device_models`
-3. Запчастини: `spare_parts`, `spare_part_risk_overrides`, `secondary_damage_risks`
-4. Ремонти: `repair_types`, `repair_types_categories`, `repair_type_parts`
-5. Прайс-лист: `model_repair_catalog`, `repair_variants`
-6. Конкуренти: `competitors`, `competitor_prices`, `part_cost_update_schedule`
-7. Ліди/заявки: `repair_orders`
-8. SEO: `seo_pages`, `sync_log`
-9. Увімкнути Directus Translations для контентних колекцій
-10. Наповнити довідники стартовими значеннями
+- [ ] **Фаза 2:** Next.js фронтенд (ЗАРАЗ)
 
 ### Фаза 2 — Next.js фронтенд
 1. Ініціалізація проекту (App Router, TypeScript, Tailwind)
