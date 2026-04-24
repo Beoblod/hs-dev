@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { hasLocale } from 'use-intl'
 import { Geist } from 'next/font/google'
 import { routing } from '@/i18n/routing'
+import { Header } from '@/app/components/Header'
 import '../globals.css'
 
 const geistSans = Geist({
@@ -32,7 +33,10 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <Header />
+          <div className="flex-1">
+            {children}
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>

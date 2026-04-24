@@ -1,4 +1,9 @@
 {
+  "nav": {
+    "repair": "Repair",
+    "branches": "Branches",
+    "cta": "Book repair"
+  },
   "home": {
     "title": "HelloService — Phone & Gadget Repair"
   },
