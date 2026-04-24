@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
+import { OrderForm } from '@/app/components/OrderForm'
 
 export const metadata: Metadata = {
   title: 'Ремонт телефонів та гаджетів — HelloService',
@@ -93,6 +94,13 @@ export default async function RemontPage({
           </Link>
         </div>
 
+      </div>
+
+      {/* Order form */}
+      <div className="bg-white">
+        <div className="max-w-[1300px] mx-auto px-4 py-16">
+          <OrderForm />
+        </div>
       </div>
     </div>
   )

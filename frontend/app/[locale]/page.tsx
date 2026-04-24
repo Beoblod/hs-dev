@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
 import { ReviewsCarousel } from '@/app/components/ReviewsCarousel'
+import { OrderForm } from '@/app/components/OrderForm'
 
 export const metadata: Metadata = {
   title: 'HelloService — Ремонт телефонів та гаджетів у Києві',
@@ -136,6 +137,13 @@ export default async function HomePage({
             titleLabel={t('reviewsTitle')}
             allLabel={t('reviewsAll')}
           />
+        </div>
+      </section>
+
+      {/* ── Order form ── */}
+      <section className="bg-white">
+        <div className="max-w-[1300px] mx-auto px-4 py-16">
+          <OrderForm />
         </div>
       </section>
 
