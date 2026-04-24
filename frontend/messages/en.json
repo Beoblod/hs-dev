@@ -53,6 +53,20 @@
     "directionsTransit": "Public transit",
     "directionsCar": "By car"
   },
+  "footer": {
+    "tagline": "Phone & Gadget Repair in Kyiv",
+    "navTitle": "Navigation",
+    "repair": "Repair",
+    "branches": "Branches",
+    "bookRepair": "Book repair",
+    "contactTitle": "Contact",
+    "phone": "+38 (067) 000-00-00",
+    "workHours": "Mon–Sun: 9:00–20:00",
+    "legalTitle": "Legal",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy",
+    "copyright": "© 2025 HelloService. All rights reserved."
+  },
   "orderForm": {
     "title": "Book a repair",
     "contactTitle": "Contact details:",

@@ -6,6 +6,7 @@ import { hasLocale } from 'use-intl'
 import { Geist } from 'next/font/google'
 import { routing } from '@/i18n/routing'
 import { Header } from '@/app/components/Header'
+import { Footer } from '@/app/components/Footer'
 import '../globals.css'
 
 const geistSans = Geist({
@@ -37,6 +38,7 @@ export default async function LocaleLayout({
           <div className="flex-1">
             {children}
           </div>
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>

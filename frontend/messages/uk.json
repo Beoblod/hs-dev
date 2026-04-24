@@ -53,6 +53,20 @@
     "directionsTransit": "Громадський транспорт",
     "directionsCar": "Автівка"
   },
+  "footer": {
+    "tagline": "Ремонт телефонів та гаджетів у Києві",
+    "navTitle": "Навігація",
+    "repair": "Ремонт",
+    "branches": "Відділення",
+    "bookRepair": "Записатися",
+    "contactTitle": "Контакти",
+    "phone": "+38 (067) 000-00-00",
+    "workHours": "Пн–Нд: 9:00–20:00",
+    "legalTitle": "Документи",
+    "terms": "Умови надання послуг",
+    "privacy": "Політика конфіденційності",
+    "copyright": "© 2025 HelloService. Всі права захищено."
+  },
   "orderForm": {
     "title": "Записатися на ремонт",
     "contactTitle": "Контактні дані:",
