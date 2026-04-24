@@ -1,2 +1,22 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+.npm
+*.tsbuildinfo
+.eslintcache
+
+# dotenv
 .env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Project
+.DS_Store
+~$*
 ssl/
