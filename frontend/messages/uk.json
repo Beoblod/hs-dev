@@ -83,7 +83,9 @@
     "timeHours": "год.",
     "partsIncluded": "В ціну включено вартість деталей і робіт",
     "similarServices": "Схожі послуги",
-    "bookBtn": "Записатися"
+    "bookBtn": "Записатися",
+    "qualityTitle": "Якість запчастини",
+    "warrantyMonths": "Гарантія {n} міс"
   },
   "branches": {
     "title": "Де можна провести ремонт",

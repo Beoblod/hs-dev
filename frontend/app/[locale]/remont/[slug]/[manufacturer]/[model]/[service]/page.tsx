@@ -22,6 +22,18 @@ type CatalogEntry = {
   effective_price: number | null
 }
 
+type QualityPrice = {
+  id: string
+  effective_price: number | null
+  warranty_months: number | null
+  sort_order: number | null
+  quality_type_id: {
+    id: string
+    name: string
+    description: string | null
+  }
+}
+
 type DeviceModel = {
   id: string
   name: string
@@ -91,6 +103,21 @@ async function getManufacturerName(slug: string): Promise<string | null> {
   return rows[0]?.name ?? null
 }
 
+async function getQualityPrices(modelId: string, repairTypeId: string): Promise<QualityPrice[]> {
+  return directus.request(
+    readItems('repair_quality_prices' as any, {
+      filter: {
+        model_id: { _eq: modelId },
+        repair_type_id: { _eq: repairTypeId },
+        is_available: { _eq: true },
+      },
+      fields: ['id', 'effective_price', 'warranty_months', 'sort_order',
+               'quality_type_id.id', 'quality_type_id.name', 'quality_type_id.description'],
+      sort: ['sort_order'],
+    })
+  ) as Promise<QualityPrice[]>
+}
+
 async function getRelatedServices(categorySlug: string, currentServiceId: string): Promise<RepairType[]> {
   const catRows = await directus.request(
     readItems('device_categories' as any, {
@@ -158,10 +185,15 @@ export default async function ServicePage({
   ])
   if (!repairType || !model) notFound()
 
-  const [price, related] = await Promise.all([
+  const [qualityPrices, price, related] = await Promise.all([
+    getQualityPrices(model.id, repairType.id),
     getPrice(model.id, repairType.id),
     getRelatedServices(catSlug, repairType.id),
   ])
+
+  const displayPrice = qualityPrices.length > 0
+    ? Math.min(...qualityPrices.map(q => q.effective_price ?? Infinity).filter(p => p !== Infinity))
+    : price
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://helloservice.ua'
 
@@ -174,7 +206,7 @@ export default async function ServicePage({
         description: repairType.description ?? `${repairType.name} ${model.name} у Києві`,
         provider: { '@type': 'LocalBusiness', name: 'HelloService', url: SITE_URL },
         areaServed: { '@type': 'City', name: 'Київ' },
-        ...(price ? { offers: { '@type': 'Offer', priceCurrency: 'UAH', price: String(price) } } : {}),
+        ...(displayPrice ? { offers: { '@type': 'Offer', priceCurrency: 'UAH', price: String(displayPrice) } } : {}),
         ...(repairType.repair_time_hours ? { duration: `PT${repairType.repair_time_hours}H` } : {}),
       }} />
 
@@ -208,33 +240,86 @@ export default async function ServicePage({
                 </p>
               )}
 
-              <div>
-                {price ? (
-                  <p className="text-[15px] font-light text-zinc-400 mb-0.5">{t('priceFrom')}</p>
-                ) : null}
-                <p className="text-[32px] font-medium text-[#1a1a1a]">
-                  {price ? (
-                    <>{price.toLocaleString('uk-UA')} ₴</>
-                  ) : (
-                    <span className="text-[20px] font-light text-zinc-400">{t('noPrices')}</span>
+              {qualityPrices.length > 0 ? (
+                /* ── Quality rows ── */
+                <div className="flex flex-col gap-3">
+                  <p className="text-[13px] font-light text-zinc-400 uppercase tracking-wide">
+                    {t('qualityTitle')}
+                  </p>
+                  <div className="border border-zinc-100 rounded-lg overflow-hidden">
+                    {qualityPrices.map((qp, i) => (
+                      <div
+                        key={qp.id}
+                        className={`flex flex-wrap sm:flex-nowrap items-center gap-3 px-4 py-3 ${i > 0 ? 'border-t border-zinc-100' : ''}`}
+                      >
+                        {/* Name + warranty */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[14px] font-normal text-[#1a1a1a] leading-snug">
+                            {qp.quality_type_id.name}
+                          </p>
+                          {qp.quality_type_id.description && (
+                            <p className="text-[12px] font-light text-zinc-400 mt-0.5 leading-snug">
+                              {qp.quality_type_id.description}
+                            </p>
+                          )}
+                          {qp.warranty_months && (
+                            <p className="text-[12px] font-light text-[#24b383] mt-0.5">
+                              {t('warrantyMonths', { n: qp.warranty_months })}
+                            </p>
+                          )}
+                        </div>
+                        {/* Price */}
+                        <p className="text-[17px] font-medium text-[#1a1a1a] shrink-0 tabular-nums">
+                          {qp.effective_price
+                            ? `${qp.effective_price.toLocaleString('uk-UA')} ₴`
+                            : <span className="text-[14px] font-light text-zinc-400">{t('noPrices')}</span>
+                          }
+                        </p>
+                        {/* CTA */}
+                        <Link
+                          href="/branches"
+                          className="shrink-0 px-4 py-2 bg-[#24b383] text-white text-[13px] font-medium rounded hover:bg-[#1fa070] transition-colors whitespace-nowrap"
+                        >
+                          {t('bookBtn')}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="flex items-center gap-2 text-[13px] font-light text-zinc-400">
+                    <CheckIcon size={14} className="text-[#24b383] shrink-0" />
+                    {t('partsIncluded')}
+                  </p>
+                </div>
+              ) : (
+                /* ── Single price (fallback) ── */
+                <>
+                  <div>
+                    {price ? (
+                      <p className="text-[15px] font-light text-zinc-400 mb-0.5">{t('priceFrom')}</p>
+                    ) : null}
+                    <p className="text-[32px] font-medium text-[#1a1a1a]">
+                      {price ? (
+                        <>{price.toLocaleString('uk-UA')} ₴</>
+                      ) : (
+                        <span className="text-[20px] font-light text-zinc-400">{t('noPrices')}</span>
+                      )}
+                    </p>
+                  </div>
+                  <div className="p-1 bg-[#c8ece0] rounded max-w-[280px]">
+                    <Link
+                      href="/branches"
+                      className="flex items-center justify-center h-[52px] px-8 bg-[#24b383] text-white text-[15px] font-medium rounded hover:bg-[#1fa070] transition-colors"
+                    >
+                      {t('order')}
+                    </Link>
+                  </div>
+                  {price && (
+                    <p className="flex items-center gap-2 text-[14px] font-light text-zinc-500">
+                      <CheckIcon size={16} className="text-[#24b383] shrink-0" />
+                      {t('partsIncluded')}
+                    </p>
                   )}
-                </p>
-              </div>
-
-              <div className="p-1 bg-[#c8ece0] rounded max-w-[280px]">
-                <Link
-                  href="/branches"
-                  className="flex items-center justify-center h-[52px] px-8 bg-[#24b383] text-white text-[15px] font-medium rounded hover:bg-[#1fa070] transition-colors"
-                >
-                  {t('order')}
-                </Link>
-              </div>
-
-              {price && (
-                <p className="flex items-center gap-2 text-[14px] font-light text-zinc-500">
-                  <CheckIcon size={16} className="text-[#24b383] shrink-0" />
-                  {t('partsIncluded')}
-                </p>
+                </>
               )}
 
               <p className="flex items-center gap-2 text-[14px] font-light text-[#24b383]">

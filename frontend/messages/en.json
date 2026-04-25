@@ -83,7 +83,9 @@
     "timeHours": "h.",
     "partsIncluded": "Parts and labor included in the price",
     "similarServices": "Similar services",
-    "bookBtn": "Book"
+    "bookBtn": "Book",
+    "qualityTitle": "Part quality",
+    "warrantyMonths": "Warranty {n} mo"
   },
   "branches": {
     "title": "Where to get a repair",
