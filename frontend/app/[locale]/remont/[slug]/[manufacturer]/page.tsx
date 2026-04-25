@@ -5,6 +5,8 @@ import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
 import { Breadcrumb } from '@/app/components/Breadcrumb'
+import { WorkStages } from '@/app/components/WorkStages'
+import { BenefitsSection } from '@/app/components/BenefitsSection'
 
 type Category = {
   id: number
@@ -145,6 +147,8 @@ export default async function ManufacturerPage({
           </section>
         ))}
       </div>
+      <WorkStages />
+      <BenefitsSection />
     </div>
   )
 }

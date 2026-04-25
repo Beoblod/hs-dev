@@ -29,6 +29,7 @@
     "benefit5Text": "We always quote the price before starting. You pay only for what's actually needed",
     "benefit6Title": "Free loaner phone",
     "benefit6Text": "We provide a loaner smartphone while your device is being repaired",
+    "beforeAfterTitle": "Before & after repair",
     "reviewsTitle": "Client reviews",
     "reviewsAll": "All reviews",
     "ctaTitle": "Not sure what's broken?",
@@ -44,6 +45,19 @@
     "repair": "Repair",
     "bookRepair": "Book a repair",
     "repairInCity": "in Kyiv"
+  },
+  "workStages": {
+    "title": "How we work",
+    "step1Title": "Book a repair",
+    "step1Text": "Book online or by phone — we'll arrange a convenient time",
+    "step2Title": "Free diagnostics",
+    "step2Text": "Our technician checks your device and identifies the exact issue",
+    "step3Title": "Repair",
+    "step3Text": "Quality parts and experienced technicians. Most repairs done same day",
+    "step4Title": "Quality check",
+    "step4Text": "We test your device across 15+ parameters before handover",
+    "step5Title": "Handover with warranty",
+    "step5Text": "Pick up your working device with a warranty card in hand"
   },
   "model": {
     "repairTypes": "Available services",

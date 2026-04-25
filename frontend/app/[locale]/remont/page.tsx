@@ -4,6 +4,8 @@ import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
 import { OrderForm } from '@/app/components/OrderForm'
+import { WorkStages } from '@/app/components/WorkStages'
+import { BenefitsSection } from '@/app/components/BenefitsSection'
 
 export const metadata: Metadata = {
   title: 'Ремонт телефонів та гаджетів — HelloService',
@@ -95,6 +97,9 @@ export default async function RemontPage({
         </div>
 
       </div>
+
+      <WorkStages />
+      <BenefitsSection />
 
       {/* Order form */}
       <div className="bg-white">
