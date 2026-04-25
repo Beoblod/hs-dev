@@ -2,57 +2,91 @@
 
 import { useState } from 'react'
 import { Link } from '@/i18n/navigation'
+import { LocaleSwitcher } from './LocaleSwitcher'
 
 type Props = {
   repairLabel: string
+  bookLabel: string
   branchesLabel: string
-  ctaLabel: string
+  novaPoshtaLabel: string
+  courierLabel: string
+  cityLabel: string
 }
 
-export function MobileMenuToggle({ repairLabel, branchesLabel, ctaLabel }: Props) {
+export function MobileMenuToggle({
+  repairLabel,
+  bookLabel,
+  branchesLabel,
+  novaPoshtaLabel,
+  courierLabel,
+  cityLabel,
+}: Props) {
   const [open, setOpen] = useState(false)
+  const close = () => setOpen(false)
 
   return (
     <>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="md:hidden flex flex-col gap-[5px] p-2 -mr-2"
+        className="lg:hidden flex flex-col gap-[5px] p-2 -mr-2 shrink-0"
         aria-label="Меню"
       >
-        <span className={`block w-6 h-[1.5px] bg-[#1a1a1a] transition-transform origin-center ${open ? 'rotate-45 translate-y-[6.5px]' : ''}`} />
-        <span className={`block w-6 h-[1.5px] bg-[#1a1a1a] transition-opacity ${open ? 'opacity-0' : ''}`} />
-        <span className={`block w-6 h-[1.5px] bg-[#1a1a1a] transition-transform origin-center ${open ? '-rotate-45 -translate-y-[6.5px]' : ''}`} />
+        <span className={`block w-5 h-[1.5px] bg-[#1a1a1a] transition-transform origin-center ${open ? 'rotate-45 translate-y-[6.5px]' : ''}`} />
+        <span className={`block w-5 h-[1.5px] bg-[#1a1a1a] transition-opacity ${open ? 'opacity-0' : ''}`} />
+        <span className={`block w-5 h-[1.5px] bg-[#1a1a1a] transition-transform origin-center ${open ? '-rotate-45 -translate-y-[6.5px]' : ''}`} />
       </button>
 
       {open && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white border-t border-zinc-100 shadow-lg z-40">
-          <nav className="max-w-[1300px] mx-auto px-4 py-4 flex flex-col gap-1">
-            <Link
-              href="/remont"
-              onClick={() => setOpen(false)}
-              className="text-[16px] font-light text-[#1a1a1a] py-3 border-b border-zinc-100"
-            >
-              {repairLabel}
-            </Link>
-            <Link
-              href="/branches"
-              onClick={() => setOpen(false)}
-              className="text-[16px] font-light text-[#1a1a1a] py-3 border-b border-zinc-100"
-            >
-              {branchesLabel}
-            </Link>
-            <div className="pt-3 pb-1">
-              <Link
-                href="/branches"
-                onClick={() => setOpen(false)}
-                className="block w-full text-center bg-[#24b383] text-white text-[16px] font-medium rounded py-3 hover:bg-[#1fa070] transition-colors"
-              >
-                {ctaLabel}
-              </Link>
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-t border-zinc-100 shadow-lg z-40">
+          <nav className="max-w-[1300px] mx-auto px-4 py-2 flex flex-col">
+            <MobileLink href="/remont" onClick={close}>{repairLabel}</MobileLink>
+            <MobileLink href="/branches" onClick={close}>{bookLabel}</MobileLink>
+            <MobileLink href="/branches" onClick={close}>{branchesLabel}</MobileLink>
+            <a href="#" onClick={close} className="text-[15px] font-light text-[#1a1a1a] py-3 border-b border-zinc-100 hover:text-[#24b383] transition-colors">
+              {novaPoshtaLabel}
+            </a>
+            <a href="#" onClick={close} className="text-[15px] font-light text-[#1a1a1a] py-3 border-b border-zinc-100 hover:text-[#24b383] transition-colors">
+              {courierLabel}
+            </a>
+
+            {/* City + language at bottom */}
+            <div className="flex items-center justify-between py-4 mt-1">
+              <span className="flex items-center gap-1.5 text-[14px] font-light text-zinc-500">
+                <CityIcon /> {cityLabel}
+              </span>
+              <LocaleSwitcher />
             </div>
           </nav>
         </div>
       )}
     </>
+  )
+}
+
+function MobileLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: '/remont' | '/branches'
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="text-[15px] font-light text-[#1a1a1a] py-3 border-b border-zinc-100 hover:text-[#24b383] transition-colors"
+    >
+      {children}
+    </Link>
+  )
+}
+
+function CityIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <rect x="3" y="8" width="10" height="13" /><rect x="13" y="3" width="8" height="18" />
+    </svg>
   )
 }

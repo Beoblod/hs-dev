@@ -1,7 +1,12 @@
 {
   "nav": {
     "repair": "Repair",
+    "book": "Book repair",
     "branches": "Branches",
+    "novaPoshta": "Nova Poshta",
+    "courier": "Courier",
+    "search": "Search",
+    "city": "Kyiv",
     "cta": "Book repair"
   },
   "home": {
