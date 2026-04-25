@@ -9,30 +9,32 @@ function url(path: string, priority = 0.7, changefreq: MetadataRoute.Sitemap[num
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const safe = <T>(p: Promise<T>, fallback: T): Promise<T> => p.catch(() => fallback)
+
   const [categories, manufacturers, models, blogPosts] = await Promise.all([
-    directus.request(readItems('device_categories' as any, {
+    safe(directus.request(readItems('device_categories' as any, {
       filter: { is_active: { _eq: true } },
       fields: ['id', 'slug'],
       limit: -1,
-    })) as Promise<{ id: string; slug: string }[]>,
+    })) as Promise<{ id: string; slug: string }[]>, []),
 
-    directus.request(readItems('manufacturers' as any, {
+    safe(directus.request(readItems('manufacturers' as any, {
       filter: { is_active: { _eq: true } },
       fields: ['id', 'slug'],
       limit: -1,
-    })) as Promise<{ id: string; slug: string }[]>,
+    })) as Promise<{ id: string; slug: string }[]>, []),
 
-    directus.request(readItems('device_models' as any, {
+    safe(directus.request(readItems('device_models' as any, {
       filter: { is_active: { _eq: true } },
       fields: ['slug', 'category_id', 'manufacturer_id'],
       limit: -1,
-    })) as Promise<{ slug: string; category_id: string; manufacturer_id: string }[]>,
+    })) as Promise<{ slug: string; category_id: string; manufacturer_id: string }[]>, []),
 
-    directus.request(readItems('blog_posts' as any, {
+    safe(directus.request(readItems('blog_posts' as any, {
       filter: { is_published: { _eq: true } },
       fields: ['slug'],
       limit: -1,
-    })) as Promise<{ slug: string }[]>,
+    })) as Promise<{ slug: string }[]>, []),
   ])
 
   const catMap = Object.fromEntries(categories.map((c) => [c.id, c.slug]))
