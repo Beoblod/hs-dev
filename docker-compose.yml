@@ -5,6 +5,26 @@ networks:
   web:
     driver: bridge
 services:
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_ENV: ${NEXT_PUBLIC_SITE_ENV:-development}
+        NEXT_PUBLIC_SITE_URL: https://${DOMAIN_FRONTEND:-dev.helloservice.ua}
+        NEXT_PUBLIC_DIRECTUS_URL: https://${DOMAIN_CMS:-cms.helloservice.ua}
+    expose:
+      - '3000'
+    environment:
+      NODE_ENV: production
+      DIRECTUS_SERVICE_TOKEN: ${DIRECTUS_SERVICE_TOKEN}
+      N8N_LEAD_WEBHOOK_URL: ${N8N_LEAD_WEBHOOK_URL}
+    networks:
+      - internal
+    restart: always
+    depends_on:
+      - directus
+
   directus:
     depends_on:
       postgres:

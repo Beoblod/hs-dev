@@ -10,6 +10,14 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+ARG NEXT_PUBLIC_SITE_ENV=development
+ARG NEXT_PUBLIC_SITE_URL=https://helloservice.ua
+ARG NEXT_PUBLIC_DIRECTUS_URL=https://cms.helloservice.ua
+ENV NEXT_PUBLIC_SITE_ENV=$NEXT_PUBLIC_SITE_ENV
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_DIRECTUS_URL=$NEXT_PUBLIC_DIRECTUS_URL
+
 RUN npm run build
 
 FROM base AS runner
