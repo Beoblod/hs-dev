@@ -119,7 +119,10 @@ export default async function ModelPage({
             {repairTypes.map((rt) => (
               <li key={rt.id}>
                 <Link
-                  href={`/remont/${rt.slug}-${modelSlug}` as any}
+                  href={{
+                    pathname: '/remont/[slug]/[manufacturer]/[model]/[service]',
+                    params: { slug: catSlug, manufacturer: mfrSlug, model: modelSlug, service: rt.slug },
+                  }}
                   className="group flex items-center justify-between bg-white rounded-lg px-6 py-5 hover:shadow-md transition-shadow"
                 >
                   <span className="text-[15px] font-light text-[#1a1a1a] group-hover:text-[#24b383] transition-colors">

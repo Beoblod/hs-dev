@@ -23,6 +23,10 @@ export const routing = defineRouting({
       uk: '/remont/[slug]/[manufacturer]/[model]',
       en: '/repair/[slug]/[manufacturer]/[model]',
     },
+    '/remont/[slug]/[manufacturer]/[model]/[service]': {
+      uk: '/remont/[slug]/[manufacturer]/[model]/[service]',
+      en: '/repair/[slug]/[manufacturer]/[model]/[service]',
+    },
     '/branches': {
       uk: '/viddilennya',
       en: '/branches',

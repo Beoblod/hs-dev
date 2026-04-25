@@ -50,8 +50,13 @@
     "price": "Price",
     "priceFrom": "from",
     "noPrices": "Price on request",
-    "order": "Order repair",
-    "diagFree": "Free diagnostics"
+    "order": "Book a repair",
+    "diagFree": "Free diagnostics",
+    "timeFrom": "from",
+    "timeHours": "h.",
+    "partsIncluded": "Parts and labor included in the price",
+    "similarServices": "Similar services",
+    "bookBtn": "Book"
   },
   "branches": {
     "title": "Where to get a repair",
