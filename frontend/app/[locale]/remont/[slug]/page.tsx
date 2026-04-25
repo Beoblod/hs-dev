@@ -160,18 +160,21 @@ export default async function RemontSlugPage({
 }) {
   const { locale, slug } = await params
 
+  const tRemont = await getTranslations('remont')
+  const repairLabel = tRemont('repair')
+
   // ── Branch 1: Category page ───────────────────────────────────────────────
   const cat = await getCategory(slug, locale)
   if (cat) {
     const manufacturers = await getManufacturers(cat.id)
-    return <CategoryView cat={cat} manufacturers={manufacturers} slug={slug} />
+    return <CategoryView cat={cat} manufacturers={manufacturers} slug={slug} repairLabel={repairLabel} />
   }
 
   // ── Branch 2: Service page ────────────────────────────────────────────────
   const svc = await resolveService(slug)
   if (svc) {
     const t = await getTranslations('service')
-    return <ServiceView svc={svc} t={t} />
+    return <ServiceView svc={svc} t={t} repairLabel={repairLabel} />
   }
 
   notFound()
@@ -183,16 +186,18 @@ function CategoryView({
   cat,
   manufacturers,
   slug,
+  repairLabel,
 }: {
   cat: Category
   manufacturers: Manufacturer[]
   slug: string
+  repairLabel: string
 }) {
   return (
     <div className="bg-[#f2f2f2] min-h-screen">
       <div className="max-w-[1300px] mx-auto px-4 py-16">
         <Breadcrumb crumbs={[
-          { label: 'Ремонт', href: '/remont' },
+          { label: repairLabel, href: '/remont' },
           { label: cat.name },
         ]} />
         <h1 className="text-[40px] font-light text-[#1a1a1a] leading-tight mb-12">
@@ -222,12 +227,12 @@ function CategoryView({
 
 // ── Service view ──────────────────────────────────────────────────────────────
 
-function ServiceView({ svc, t }: { svc: ServiceData; t: (key: string) => string }) {
+function ServiceView({ svc, t, repairLabel }: { svc: ServiceData; t: (key: string) => string; repairLabel: string }) {
   return (
     <div className="bg-[#f2f2f2] min-h-screen">
       <div className="max-w-[1300px] mx-auto px-4 py-16">
         <Breadcrumb crumbs={[
-          { label: 'Ремонт', href: '/remont' },
+          { label: repairLabel, href: '/remont' },
           { label: `${svc.repairType.name} ${svc.model.name}` },
         ]} />
 

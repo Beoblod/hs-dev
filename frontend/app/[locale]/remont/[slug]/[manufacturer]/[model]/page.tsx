@@ -38,15 +38,26 @@ async function getModel(
   return rows[0] ?? null
 }
 
-async function getCategoryId(slug: string): Promise<number | null> {
+async function getCategory(slug: string): Promise<{ id: number; name: string } | null> {
   const rows = await directus.request(
     readItems('device_categories' as any, {
       filter: { slug: { _eq: slug }, is_active: { _eq: true } },
-      fields: ['id'],
+      fields: ['id', 'name'],
       limit: 1,
     })
-  ) as { id: number }[]
-  return rows[0]?.id ?? null
+  ) as { id: number; name: string }[]
+  return rows[0] ?? null
+}
+
+async function getManufacturerName(slug: string): Promise<string | null> {
+  const rows = await directus.request(
+    readItems('manufacturers' as any, {
+      filter: { slug: { _eq: slug }, is_active: { _eq: true } },
+      fields: ['name'],
+      limit: 1,
+    })
+  ) as { name: string }[]
+  return rows[0]?.name ?? null
 }
 
 async function getRepairTypes(categoryId: number): Promise<RepairType[]> {
@@ -72,12 +83,15 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string; manufacturer: string; model: string }>
 }): Promise<Metadata> {
-  const { locale, manufacturer: mfrSlug, model: modelSlug } = await params
-  const model = await getModel(modelSlug, mfrSlug)
+  const { manufacturer: mfrSlug, model: modelSlug } = await params
+  const [model, t] = await Promise.all([
+    getModel(modelSlug, mfrSlug),
+    getTranslations('remont'),
+  ])
   if (!model) return {}
   return {
-    title: `Ремонт ${model.name} у Києві | HelloService`,
-    description: `Ремонт ${model.name}: заміна дисплея, батареї, роз'єму та інших компонентів. Діагностика безкоштовно.`,
+    title: `${t('repair')} ${model.name} ${t('repairInCity')} | HelloService`,
+    description: `${t('repair')} ${model.name}: заміна дисплея, батареї, роз'єму та інших компонентів. Діагностика безкоштовно.`,
   }
 }
 
@@ -87,28 +101,32 @@ export default async function ModelPage({
   params: Promise<{ locale: string; slug: string; manufacturer: string; model: string }>
 }) {
   const { slug: catSlug, manufacturer: mfrSlug, model: modelSlug } = await params
-  const t = await getTranslations('model')
-
-  const [model, categoryId] = await Promise.all([
-    getModel(modelSlug, mfrSlug),
-    getCategoryId(catSlug),
+  const [t, tRemont] = await Promise.all([
+    getTranslations('model'),
+    getTranslations('remont'),
   ])
-  if (!model || !categoryId) notFound()
 
-  const repairTypes = await getRepairTypes(categoryId)
+  const [model, category, mfrName] = await Promise.all([
+    getModel(modelSlug, mfrSlug),
+    getCategory(catSlug),
+    getManufacturerName(mfrSlug),
+  ])
+  if (!model || !category) notFound()
+
+  const repairTypes = await getRepairTypes(category.id)
 
   return (
     <div className="bg-[#f2f2f2] min-h-screen">
       <div className="max-w-[1300px] mx-auto px-4 py-16">
         <Breadcrumb crumbs={[
-          { label: 'Ремонт', href: '/remont' },
-          { label: catSlug, href: `/remont/${catSlug}` as any },
-          { label: mfrSlug, href: `/remont/${catSlug}/${mfrSlug}` as any },
+          { label: tRemont('repair'), href: '/remont' },
+          { label: category.name, href: `/remont/${catSlug}` as any },
+          { label: mfrName ?? mfrSlug, href: `/remont/${catSlug}/${mfrSlug}` as any },
           { label: model.name },
         ]} />
 
         <h1 className="text-[40px] font-light text-[#1a1a1a] leading-tight mb-3">
-          Ремонт {model.name}
+          {tRemont('repair')} {model.name}
         </h1>
         <p className="text-[16px] font-light text-zinc-500 mb-12">{t('repairTypes')}</p>
 
@@ -140,7 +158,7 @@ export default async function ModelPage({
             href="/branches"
             className="flex items-center justify-center w-full h-[56px] bg-[#24b383] rounded text-white text-[16px] font-medium hover:bg-[#1fa070] transition-colors"
           >
-            Записатися на ремонт
+            {tRemont('bookRepair')}
           </Link>
         </div>
       </div>

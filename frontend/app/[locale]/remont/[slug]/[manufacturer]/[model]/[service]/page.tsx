@@ -67,6 +67,28 @@ async function getPrice(modelId: string, repairTypeId: string): Promise<number |
   return rows[0]?.effective_price ?? null
 }
 
+async function getCategoryName(slug: string): Promise<string | null> {
+  const rows = await directus.request(
+    readItems('device_categories' as any, {
+      filter: { slug: { _eq: slug }, is_active: { _eq: true } },
+      fields: ['name'],
+      limit: 1,
+    })
+  ) as { name: string }[]
+  return rows[0]?.name ?? null
+}
+
+async function getManufacturerName(slug: string): Promise<string | null> {
+  const rows = await directus.request(
+    readItems('manufacturers' as any, {
+      filter: { slug: { _eq: slug }, is_active: { _eq: true } },
+      fields: ['name'],
+      limit: 1,
+    })
+  ) as { name: string }[]
+  return rows[0]?.name ?? null
+}
+
 async function getRelatedServices(categorySlug: string, currentServiceId: string): Promise<RepairType[]> {
   const catRows = await directus.request(
     readItems('device_categories' as any, {
@@ -120,11 +142,16 @@ export default async function ServicePage({
   params: Promise<{ locale: string; slug: string; manufacturer: string; model: string; service: string }>
 }) {
   const { slug: catSlug, manufacturer: mfrSlug, model: modelSlug, service: serviceSlug } = await params
-  const t = await getTranslations('service')
+  const [t, tRemont] = await Promise.all([
+    getTranslations('service'),
+    getTranslations('remont'),
+  ])
 
-  const [repairType, model] = await Promise.all([
+  const [repairType, model, catName, mfrName] = await Promise.all([
     getRepairType(serviceSlug),
     getModel(modelSlug, mfrSlug),
+    getCategoryName(catSlug),
+    getManufacturerName(mfrSlug),
   ])
   if (!repairType || !model) notFound()
 
@@ -140,9 +167,9 @@ export default async function ServicePage({
       <section className="bg-white">
         <div className="max-w-[1300px] mx-auto px-4 pt-6 pb-10">
           <Breadcrumb crumbs={[
-            { label: 'Ремонт', href: '/remont' },
-            { label: catSlug, href: `/remont/${catSlug}` as any },
-            { label: mfrSlug, href: `/remont/${catSlug}/${mfrSlug}` as any },
+            { label: tRemont('repair'), href: '/remont' },
+            { label: catName ?? catSlug, href: `/remont/${catSlug}` as any },
+            { label: mfrName ?? mfrSlug, href: `/remont/${catSlug}/${mfrSlug}` as any },
             { label: model.name, href: `/remont/${catSlug}/${mfrSlug}/${modelSlug}` as any },
             { label: repairType.name },
           ]} />
@@ -209,7 +236,7 @@ export default async function ServicePage({
         <section className="bg-white mt-3">
           <div className="max-w-[1300px] mx-auto px-4 py-10">
             <h2 className="text-[24px] font-light text-[#1a1a1a] mb-4">
-              Ремонт {model.name} у Києві
+              {tRemont('repair')} {model.name} {tRemont('repairInCity')}
             </h2>
             <p className="text-[15px] font-light text-zinc-600 leading-relaxed max-w-[760px]">
               {repairType.description}

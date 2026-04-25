@@ -40,7 +40,10 @@
     "chooseDevice": "Choose a device category",
     "ctaTitle": "Can't find your device?",
     "ctaText": "Leave a request — we'll find the right technician for you",
-    "ctaButton": "Book repair"
+    "ctaButton": "Book repair",
+    "repair": "Repair",
+    "bookRepair": "Book a repair",
+    "repairInCity": "in Kyiv"
   },
   "model": {
     "repairTypes": "Available services",

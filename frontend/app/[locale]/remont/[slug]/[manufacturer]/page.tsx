@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
@@ -70,14 +71,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string; manufacturer: string }>
 }): Promise<Metadata> {
   const { locale, slug, manufacturer } = await params
-  const [cat, mfr] = await Promise.all([
+  const [cat, mfr, t] = await Promise.all([
     getCategory(slug, locale),
     getManufacturer(manufacturer),
+    getTranslations('remont'),
   ])
   if (!cat || !mfr) return {}
   return {
-    title: `Ремонт ${mfr.name} ${cat.name} | HelloService`,
-    description: `Ремонт ${mfr.name} у Києві. Вибери модель — отримай точну ціну.`,
+    title: `${t('repair')} ${mfr.name} ${cat.name} | HelloService`,
+    description: `${t('repair')} ${mfr.name} ${t('repairInCity')}. Вибери модель — отримай точну ціну.`,
   }
 }
 
@@ -88,9 +90,10 @@ export default async function ManufacturerPage({
 }) {
   const { locale, slug, manufacturer: mfrSlug } = await params
 
-  const [cat, mfr] = await Promise.all([
+  const [cat, mfr, t] = await Promise.all([
     getCategory(slug, locale),
     getManufacturer(mfrSlug),
+    getTranslations('remont'),
   ])
   if (!cat || !mfr) notFound()
 
@@ -107,13 +110,13 @@ export default async function ManufacturerPage({
     <div className="bg-[#f2f2f2] min-h-screen">
       <div className="max-w-[1300px] mx-auto px-4 py-16">
         <Breadcrumb crumbs={[
-          { label: 'Ремонт', href: '/remont' },
+          { label: t('repair'), href: '/remont' },
           { label: cat.name, href: `/remont/${slug}` as any },
           { label: mfr.name },
         ]} />
 
         <h1 className="text-[40px] font-light text-[#1a1a1a] leading-tight mb-12">
-          Ремонт {mfr.name} {cat.name}
+          {t('repair')} {mfr.name} {cat.name}
         </h1>
 
         {Object.entries(groups).map(([line, lineModels]) => (
