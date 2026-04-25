@@ -24,7 +24,7 @@ type CatalogEntry = {
 
 type QualityPrice = {
   id: string
-  effective_price: number | null
+  effective_price: string | number | null
   warranty_months: number | null
   sort_order: number | null
   quality_type_id: {
@@ -192,7 +192,7 @@ export default async function ServicePage({
   ])
 
   const displayPrice = qualityPrices.length > 0
-    ? Math.min(...qualityPrices.map(q => q.effective_price ?? Infinity).filter(p => p !== Infinity))
+    ? Math.min(...qualityPrices.map(q => q.effective_price != null ? Number(q.effective_price) : Infinity).filter(p => isFinite(p)))
     : price
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://helloservice.ua'
@@ -270,8 +270,8 @@ export default async function ServicePage({
                         </div>
                         {/* Price */}
                         <p className="text-[17px] font-medium text-[#1a1a1a] shrink-0 tabular-nums">
-                          {qp.effective_price
-                            ? `${qp.effective_price.toLocaleString('uk-UA')} ₴`
+                          {qp.effective_price != null
+                            ? `${Number(qp.effective_price).toLocaleString('uk-UA')} ₴`
                             : <span className="text-[14px] font-light text-zinc-400">{t('noPrices')}</span>
                           }
                         </p>
