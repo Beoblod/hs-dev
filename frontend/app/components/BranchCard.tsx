@@ -1,3 +1,4 @@
+import { Link } from '@/i18n/navigation'
 import {
   MapPinFillIcon, PhoneIcon, MapPinIcon, TimeIcon,
   WalkIcon, BusIcon, CarIcon, ArrowRightIcon,
@@ -5,6 +6,7 @@ import {
 
 type Branch = {
   id: string
+  slug: string | null
   name: string
   address: string
   phone_primary: string
@@ -25,8 +27,8 @@ type Labels = {
 }
 
 export function BranchCard({ branch, labels }: { branch: Branch; labels: Labels }) {
-  return (
-    <div className="bg-white rounded-lg border border-zinc-100 overflow-hidden">
+  const card = (
+    <div className="bg-white rounded-lg border border-zinc-100 overflow-hidden hover:border-[#24b383] transition-colors">
       {/* Name row */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100">
         <div className="flex items-center gap-3">
@@ -108,4 +110,13 @@ export function BranchCard({ branch, labels }: { branch: Branch; labels: Labels 
       </div>
     </div>
   )
+
+  if (branch.slug) {
+    return (
+      <Link href={{ pathname: '/branches/[slug]', params: { slug: branch.slug } }} className="block">
+        {card}
+      </Link>
+    )
+  }
+  return card
 }

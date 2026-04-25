@@ -96,7 +96,9 @@
     "hours": "Графік роботи",
     "directionsWalk": "Пішки",
     "directionsTransit": "Транспорт",
-    "directionsCar": "Авто"
+    "directionsCar": "Авто",
+    "backToBranches": "← Всі відділення",
+    "mapAlt": "Карта відділення"
   },
   "footer": {
     "clientsTitle": "Клієнтам",

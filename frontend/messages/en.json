@@ -96,7 +96,9 @@
     "hours": "Working hours",
     "directionsWalk": "Walk",
     "directionsTransit": "Transit",
-    "directionsCar": "Car"
+    "directionsCar": "Car",
+    "backToBranches": "← All branches",
+    "mapAlt": "Branch map"
   },
   "footer": {
     "clientsTitle": "For clients",

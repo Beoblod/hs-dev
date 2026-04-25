@@ -31,6 +31,10 @@ export const routing = defineRouting({
       uk: '/viddilennya',
       en: '/branches',
     },
+    '/branches/[slug]': {
+      uk: '/viddilennya/[slug]',
+      en: '/branches/[slug]',
+    },
     '/nova-poshta': '/nova-poshta',
     '/guarantee': '/guarantee',
     '/public-offer': '/public-offer',

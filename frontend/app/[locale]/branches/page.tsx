@@ -9,6 +9,7 @@ import { OrderForm } from '@/app/components/OrderForm'
 
 type Branch = {
   id: string
+  slug: string | null
   name: string
   city: string | null
   address: string
@@ -35,7 +36,7 @@ export default async function BranchesPage() {
       filter: { is_active: { _eq: true } },
       sort: ['sort_order', 'name'],
       fields: [
-        'id', 'name', 'city', 'address',
+        'id', 'slug', 'name', 'city', 'address',
         'phone_primary', 'phone_secondary',
         'working_hours',
         'directions_walk_url', 'directions_transit_url', 'directions_car_url',
