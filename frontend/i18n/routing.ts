@@ -41,5 +41,6 @@ export const routing = defineRouting({
     '/vacancies': '/vacancies',
     '/corporate': '/corporate',
     '/suppliers': '/suppliers',
+    '/reviews': '/reviews',
   },
 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 
 type ServiceOption = 'branch' | 'nova_poshta' | 'courier'
@@ -17,16 +17,26 @@ type FormState = {
   confirm_no_call: boolean
 }
 
-const DEVICE_TYPES = [
-  'Смартфон',
-  'Ноутбук',
-  'Планшет',
-  'Смарт-годинник',
-  'Навушники',
+type DeviceCategory = { id: string; name: string; slug: string }
+
+const FALLBACK_DEVICE_TYPES: DeviceCategory[] = [
+  { id: '1', name: 'Смартфон', slug: 'telefony' },
+  { id: '2', name: 'Ноутбук', slug: 'noutbuky' },
+  { id: '3', name: 'Планшет', slug: 'planshety' },
+  { id: '4', name: 'Смарт-годинник', slug: 'smart-hodynnyky' },
+  { id: '5', name: 'Навушники', slug: 'navushnyky' },
 ]
 
 export function OrderForm() {
   const t = useTranslations('orderForm')
+  const [deviceTypes, setDeviceTypes] = useState<DeviceCategory[]>(FALLBACK_DEVICE_TYPES)
+
+  useEffect(() => {
+    fetch('/api/device-categories')
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data) && data.length > 0) setDeviceTypes(data) })
+      .catch(() => {})
+  }, [])
 
   const [form, setForm] = useState<FormState>({
     name: '',
@@ -112,8 +122,8 @@ export function OrderForm() {
               className={`${inputClass} appearance-none cursor-pointer ${form.device_type ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}
             >
               <option value="" disabled>{t('deviceTypePlaceholder')}</option>
-              {DEVICE_TYPES.map((dt) => (
-                <option key={dt} value={dt}>{dt}</option>
+              {deviceTypes.map((dt) => (
+                <option key={dt.id} value={dt.name}>{dt.name}</option>
               ))}
             </select>
             <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#1a1a1a]" />

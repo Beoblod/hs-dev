@@ -16,6 +16,7 @@ export async function Footer() {
             <div>
               <SectionTitle icon={<UserIcon />}>{t('clientsTitle')}</SectionTitle>
               <ul>
+                <Item label={t('reviews')} href="/reviews" icon={<StarIcon />} />
                 <Item label={t('blog')} href="/blog" icon={<BlogIcon />} />
                 <Item label={t('guarantee')} href="/guarantee" icon={<ShieldIcon />} />
                 <Item label={t('guide')} href="/guide" icon={<BookIcon />} />
@@ -186,6 +187,13 @@ function MailIcon() {
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" strokeLinejoin="round" />
       <polyline points="22,6 12,13 2,6" />
+    </svg>
+  )
+}
+function StarIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinejoin="round" />
     </svg>
   )
 }
