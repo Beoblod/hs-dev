@@ -8,7 +8,7 @@
 - **Проект:** Сервісний центр HelloService
 - **ТЗ:** `tz_helloservice_v2.2.docx` (у цьому ж репозиторії)
 - **Поточна фаза:** 2 — Next.js фронтенд
-- **Останнє оновлення:** 2026-04-24 (сесія 3)
+- **Останнє оновлення:** 2026-04-25 (сесія 4)
 
 ## Сервери
 | Роль | Сервер | Деталі |
@@ -102,19 +102,62 @@
 ## В процесі
 - [ ] **Фаза 2:** Next.js фронтенд (ЗАРАЗ)
 
-### Фаза 2 — Next.js фронтенд
-1. Ініціалізація проекту (App Router, TypeScript, Tailwind)
-2. Підключення Directus SDK + `next-intl`
-3. SEO-сторінки: `/remont/`, `/remont/[category]/`, `/remont/[category]/[manufacturer]/`
-4. Сторінка моделі: `/remont/[category]/[model]/`
-5. Сторінка послуги (плоска): `/remont/[repair-model]/` — SSG
-6. Сторінки брендів: `/brand/[manufacturer]/`, `/brand/[manufacturer]/[brand_line]/`
-7. Форма заявки → запис у `repair_orders` у Directus
-8. XML Sitemap, schema.org, canonical, breadcrumbs
-9. Підтягнути дизайн з Figma
-10. Підключити GA4 + Microsoft Clarity (з дня запуску)
-11. Додати GSC + sitemap.xml у день міграції на helloservice.ua
-12. Looker Studio dashboard: GA4 + GSC після першого місяця
+### Фаза 2 — Next.js фронтенд (виконано)
+- [x] Ініціалізація проекту (App Router, TypeScript, Tailwind, Geologica font)
+- [x] Підключення Directus SDK + `next-intl` (uk/en, localePrefix as-needed)
+- [x] `/remont` — список категорій
+- [x] `/remont/[slug]` — список виробників категорії
+- [x] `/remont/[slug]/[manufacturer]` — список моделей виробника
+- [x] `/remont/[slug]/[manufacturer]/[model]` — типи ремонту моделі
+- [x] `/remont/[slug]/[manufacturer]/[model]/[service]` — сторінка послуги (ціна, час, related)
+- [x] `/branches` (`/viddilennya`) — відділення + карта OpenStreetMap + форма
+- [x] Header (3 breakpoints, Remix Icons, LocaleSwitcher, city badge)
+- [x] Footer (4 колонки, newsletter, social links)
+- [x] OrderForm (client component, POST → /api/leads, n8n webhook)
+- [x] BranchCard (Remix Icons з Figma Components)
+- [x] ReviewsCarousel (статичні дані, 5 відгуків)
+- [x] icons.tsx — 15 Remix Icons з Figma Components (ToolsIcon, EditIcon, BuildingIcon, …)
+- [x] Breadcrumb компонент
+- [x] Figma Pro API підключено (token збережено в memory)
+
+### Фаза 2 — Деталізований план робіт (Sprint 1-5)
+> Складено 2026-04-25 після аудиту Figma vs реалізація. 34 невідповідності знайдено.
+
+#### Sprint 1 — Критичні виправлення ⚠️
+- [ ] **S1-1** `app/api/leads/route.ts` — ВІДСУТНІЙ, форма не працює (POST → Directus leads + n8n)
+- [ ] **S1-2** Breadcrumbs: slug → реальна назва (напр. `telefony` → `Телефони`) на всіх сторінках
+- [ ] **S1-3** i18n: виправити 4 файли з hardcoded "Ремонт", "Записатися на ремонт" (без EN-перекладу)
+
+#### Sprint 2 — Спільні секції (повторюються на 5+ сторінках)
+- [ ] **S2-1** `WorkStages.tsx` — "Як ми працюємо" (4-5 кроків): `/remont`, `/remont/[slug]`, `/remont/[slug]/[mfr]`, `/remont/[slug]/[mfr]/[model]`
+- [ ] **S2-2** `BenefitsSection.tsx` — рефактор секції "Переваги" з Home у окремий компонент, додати на ті самі сторінки
+- [ ] **S2-3** `BeforeAfterSlider.tsx` — drag/touch слайдер "До та після" на Home
+
+#### Sprint 3 — Нові сторінки (HIGH priority)
+- [ ] **S3-1** `/nova-poshta` — Figma `1910:8116`: Info + Procedure (кроки) + FAQ
+- [ ] **S3-2** `/guarantee` — Figma `927:3884`: FAQ-сторінка гарантії
+- [ ] **S3-3** `/contract` — Figma `921:1011`: Текст публічної оферти
+
+#### Sprint 4 — Контент та сторінки другого пріоритету
+- [ ] **S4-1** `/reviews` + оновити `ReviewsCarousel.tsx` → дані з Directus `reviews`
+- [ ] **S4-2** `/blog` + `/blog/[slug]` — Figma `1543:5117`, `1186:2`
+- [ ] **S4-3** OrderForm: замінити hardcoded `DEVICE_TYPES` → fetch з Directus `device_categories`
+
+#### Sprint 5 — SEO
+- [ ] **S5-1** `app/sitemap.ts` — XML sitemap (categories, manufacturers, models, services)
+- [ ] **S5-2** schema.org: `LocalBusiness` (Home), `BreadcrumbList` (всі), `Service` (послуги)
+- [ ] **S5-3** `generateMetadata` canonical + og:* + twitter:* для всіх сторінок
+
+#### Поза планом (Фаза 5+)
+- File upload у формі (потребує Directus Files API)
+- Newsletter backend
+- `/branches/[slug]` з галереєю (Figma `1108:492`)
+- `/customers`, `/vacancies` (низький пріоритет)
+
+#### Відомі відсутні UI-елементи (Figma → не реалізовано)
+- Фільтр міст на сторінці відділень (`#11`)
+- Логотипи виробників у картках `/remont` (`#22`)
+- Фото пристроїв на сервісній сторінці (placeholder SVG замість реального фото) (`#23`, `#24`)
 
 ### Фаза 3 — Конкурентне ціноутворення та міграція домену
 1. Наповнити `competitors`, `competitor_prices`
