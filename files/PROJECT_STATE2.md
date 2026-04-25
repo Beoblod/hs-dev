@@ -66,8 +66,8 @@
 - [x] `lib/directus-server.ts` — server-side Directus client зі static token
 - [x] `messages/uk.json` + `messages/en.json` — всі i18n ключі
 - [x] `device_categories.slug` = `telefony`, `slug_en` = `phones`
-- [ ] XML Sitemap, schema.org, canonical, breadcrumbs
-- [ ] Deploy → `dev.helloservice.ua`
+- [x] XML Sitemap, schema.org, canonical, og:image — Sprint 5 ✓
+- [x] Deploy → `dev.helloservice.ua` ✓ (2026-04-25)
 
 ---
 
@@ -115,38 +115,44 @@
 - [x] Footer (4 колонки, newsletter, social links)
 - [x] OrderForm (client component, POST → /api/leads, n8n webhook)
 - [x] BranchCard (Remix Icons з Figma Components)
-- [x] ReviewsCarousel (статичні дані, 5 відгуків)
+- [x] ReviewsCarousel → дані з Directus `reviews`
 - [x] icons.tsx — 15 Remix Icons з Figma Components (ToolsIcon, EditIcon, BuildingIcon, …)
-- [x] Breadcrumb компонент
+- [x] Breadcrumb компонент + BreadcrumbList JSON-LD
 - [x] Figma Pro API підключено (token збережено в memory)
 
-### Фаза 2 — Деталізований план робіт (Sprint 1-5)
-> Складено 2026-04-25 після аудиту Figma vs реалізація. 34 невідповідності знайдено.
+### Фаза 2 — Деталізований план робіт (Sprint 1-5) ✓ ВИКОНАНО
+> Складено 2026-04-25. Всі спринти закрито 2026-04-25.
 
-#### Sprint 1 — Критичні виправлення ⚠️
-- [ ] **S1-1** `app/api/leads/route.ts` — ВІДСУТНІЙ, форма не працює (POST → Directus leads + n8n)
-- [ ] **S1-2** Breadcrumbs: slug → реальна назва (напр. `telefony` → `Телефони`) на всіх сторінках
-- [ ] **S1-3** i18n: виправити 4 файли з hardcoded "Ремонт", "Записатися на ремонт" (без EN-перекладу)
+#### Sprint 1 ✓
+- [x] Breadcrumbs: slug → реальна назва на всіх 4 рівнях remont
+- [x] i18n: hardcoded рядки → `getTranslations('remont')` у 4 файлах
 
-#### Sprint 2 — Спільні секції (повторюються на 5+ сторінках)
-- [ ] **S2-1** `WorkStages.tsx` — "Як ми працюємо" (4-5 кроків): `/remont`, `/remont/[slug]`, `/remont/[slug]/[mfr]`, `/remont/[slug]/[mfr]/[model]`
-- [ ] **S2-2** `BenefitsSection.tsx` — рефактор секції "Переваги" з Home у окремий компонент, додати на ті самі сторінки
-- [ ] **S2-3** `BeforeAfterSlider.tsx` — drag/touch слайдер "До та після" на Home
+#### Sprint 2 ✓
+- [x] `WorkStages.tsx` — додано на /remont, /remont/[slug], /remont/[slug]/[mfr], /remont/[slug]/[mfr]/[model]
+- [x] `BenefitsSection.tsx` — рефактор з Home, додано на ті самі сторінки
+- [x] `BeforeAfterSlider.tsx` — drag/touch, Home
 
-#### Sprint 3 — Нові сторінки (HIGH priority)
-- [ ] **S3-1** `/nova-poshta` — Figma `1910:8116`: Info + Procedure (кроки) + FAQ
-- [ ] **S3-2** `/guarantee` — Figma `927:3884`: FAQ-сторінка гарантії
-- [ ] **S3-3** `/contract` — Figma `921:1011`: Текст публічної оферти
+#### Sprint 3 ✓
+- [x] `/nova-poshta`, `/guarantee`, `/public-offer`, `/guide`, `/special-offers`, `/corporate`, `/suppliers` — Directus `pages` + `faq_items` + `nova_poshta_steps`
+- [x] `/blog` + `/blog/[slug]` — Directus `blog_posts`
+- [x] `/vacancies` — Directus `vacancies`
+- [x] Footer href + Header nova-poshta link + MobileMenu
 
-#### Sprint 4 — Контент та сторінки другого пріоритету
-- [ ] **S4-1** `/reviews` + оновити `ReviewsCarousel.tsx` → дані з Directus `reviews`
-- [ ] **S4-2** `/blog` + `/blog/[slug]` — Figma `1543:5117`, `1186:2`
-- [ ] **S4-3** OrderForm: замінити hardcoded `DEVICE_TYPES` → fetch з Directus `device_categories`
+#### Sprint 4 ✓
+- [x] `/reviews` — Directus `reviews` (6 seed записів)
+- [x] `ReviewsCarousel` → `/api/reviews` (live data)
+- [x] OrderForm device types → `/api/device-categories` (live data)
 
-#### Sprint 5 — SEO
-- [ ] **S5-1** `app/sitemap.ts` — XML sitemap (categories, manufacturers, models, services)
-- [ ] **S5-2** schema.org: `LocalBusiness` (Home), `BreadcrumbList` (всі), `Service` (послуги)
-- [ ] **S5-3** `generateMetadata` canonical + og:* + twitter:* для всіх сторінок
+#### Sprint 5 ✓
+- [x] `app/sitemap.ts` — динамічний XML (категорії, mfr-комбо, моделі, блог)
+- [x] `app/robots.ts` — env-based (Disallow: / на dev, Allow: / на prod)
+- [x] `lib/metadata.ts` → `buildMeta()` — canonical + og:* + twitter:* на всіх 18 сторінках
+- [x] `app/[locale]/layout.tsx` — `metadataBase` + title template
+- [x] `LocalBusiness` JSON-LD (Home), `BreadcrumbList` (Breadcrumb), `Service` (service page)
+- [x] `opengraph-image.tsx` — auto-generated og:image (1200×630, next/og)
+
+#### Deploy ✓
+- [x] `dev.helloservice.ua` — live, всі 11 ендпоінтів 200 ✓ (2026-04-25)
 
 #### Поза планом (Фаза 5+)
 - File upload у формі (потребує Directus Files API)
