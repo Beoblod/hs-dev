@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
@@ -83,16 +84,17 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string; manufacturer: string; model: string }>
 }): Promise<Metadata> {
-  const { manufacturer: mfrSlug, model: modelSlug } = await params
+  const { slug, manufacturer: mfrSlug, model: modelSlug } = await params
   const [model, t] = await Promise.all([
     getModel(modelSlug, mfrSlug),
     getTranslations('remont'),
   ])
   if (!model) return {}
-  return {
-    title: `${t('repair')} ${model.name} ${t('repairInCity')} | HelloService`,
+  return buildMeta({
+    title: `${t('repair')} ${model.name} ${t('repairInCity')}`,
     description: `${t('repair')} ${model.name}: заміна дисплея, батареї, роз'єму та інших компонентів. Діагностика безкоштовно.`,
-  }
+    path: `/remont/${slug}/${mfrSlug}/${modelSlug}`,
+  })
 }
 
 export default async function ModelPage({

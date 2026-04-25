@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
@@ -139,15 +140,16 @@ export async function generateMetadata({
 
   const cat = await getCategory(slug, locale)
   if (cat) {
-    return { title: cat.meta_title, description: cat.meta_description }
+    return buildMeta({ title: cat.meta_title, description: cat.meta_description, path: `/remont/${slug}` })
   }
 
   const svc = await resolveService(slug)
   if (svc) {
-    return {
-      title: `${svc.repairType.name} ${svc.model.name} | HelloService`,
+    return buildMeta({
+      title: `${svc.repairType.name} ${svc.model.name}`,
       description: `${svc.repairType.name} ${svc.model.name} у Києві. Діагностика безкоштовно. Гарантія на роботи.`,
-    }
+      path: `/remont/${slug}`,
+    })
   }
 
   return {}

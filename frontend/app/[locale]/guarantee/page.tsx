@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
@@ -33,10 +34,11 @@ async function getFaq(): Promise<FaqItem[]> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage()
-  return {
-    title: page?.meta_title ?? 'Гарантія | HelloService',
+  return buildMeta({
+    title: page?.meta_title ?? 'Гарантія',
     description: page?.meta_desc ?? 'Умови гарантії на ремонт у HelloService.',
-  }
+    path: '/guarantee',
+  })
 }
 
 export default async function GuaranteePage() {

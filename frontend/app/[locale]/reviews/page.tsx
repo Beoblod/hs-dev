@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
@@ -32,10 +33,11 @@ async function getReviews(): Promise<Review[]> {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'Відгуки клієнтів | HelloService',
+  return buildMeta({
+    title: 'Відгуки клієнтів',
     description: 'Читайте відгуки клієнтів про ремонт телефонів, ноутбуків та планшетів у сервісному центрі HelloService.',
-  }
+    path: '/reviews',
+  })
 }
 
 export default async function ReviewsPage() {

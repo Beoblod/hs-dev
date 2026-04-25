@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
@@ -79,10 +80,11 @@ export async function generateMetadata({
     getTranslations('remont'),
   ])
   if (!cat || !mfr) return {}
-  return {
-    title: `${t('repair')} ${mfr.name} ${cat.name} | HelloService`,
+  return buildMeta({
+    title: `${t('repair')} ${mfr.name} ${cat.name}`,
     description: `${t('repair')} ${mfr.name} ${t('repairInCity')}. Вибери модель — отримай точну ціну.`,
-  }
+    path: `/remont/${slug}/${manufacturer}`,
+  })
 }
 
 export default async function ManufacturerPage({

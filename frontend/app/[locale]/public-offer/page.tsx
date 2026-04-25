@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { notFound } from 'next/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
@@ -19,10 +20,11 @@ async function getPage(): Promise<Page | null> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage()
-  return {
-    title: page?.meta_title ?? 'Договір публічної оферти | HelloService',
+  return buildMeta({
+    title: page?.meta_title ?? 'Договір публічної оферти',
     description: page?.meta_desc ?? 'Договір публічної оферти HelloService.',
-  }
+    path: '/public-offer',
+  })
 }
 
 export default async function PublicOfferPage() {

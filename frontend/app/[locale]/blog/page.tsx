@@ -1,14 +1,16 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
 import { Breadcrumb } from '@/app/components/Breadcrumb'
 
-export const metadata: Metadata = {
-  title: 'Блог | HelloService',
+export const metadata: Metadata = buildMeta({
+  title: 'Блог',
   description: 'Корисні статті та поради з ремонту та обслуговування гаджетів.',
-}
+  path: '/blog',
+})
 
 type BlogPost = {
   id: string

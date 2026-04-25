@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { notFound } from 'next/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
@@ -20,7 +21,11 @@ async function getPage(): Promise<Page | null> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage()
-  return { title: page?.meta_title ?? 'Корпоративним клієнтам | HelloService', description: page?.meta_desc ?? undefined }
+  return buildMeta({
+    title: page?.meta_title ?? 'Корпоративним клієнтам',
+    description: page?.meta_desc ?? 'Корпоративний ремонт техніки для юридичних осіб та компаній.',
+    path: '/corporate',
+  })
 }
 
 export default async function CorporatePage() {

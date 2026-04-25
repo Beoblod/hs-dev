@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
@@ -7,6 +8,7 @@ import { readItems } from '@directus/sdk'
 import { Breadcrumb } from '@/app/components/Breadcrumb'
 import { OrderForm } from '@/app/components/OrderForm'
 import { TimeIcon, CheckIcon, SearchIcon } from '@/app/components/icons'
+import { JsonLd } from '@/app/components/JsonLd'
 
 type RepairType = {
   id: string
@@ -124,16 +126,17 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string; manufacturer: string; model: string; service: string }>
 }): Promise<Metadata> {
-  const { manufacturer: mfrSlug, model: modelSlug, service: serviceSlug } = await params
+  const { slug, manufacturer: mfrSlug, model: modelSlug, service: serviceSlug } = await params
   const [repairType, model] = await Promise.all([
     getRepairType(serviceSlug),
     getModel(modelSlug, mfrSlug),
   ])
   if (!repairType || !model) return {}
-  return {
-    title: `${repairType.name} ${model.name} у Києві | HelloService`,
+  return buildMeta({
+    title: `${repairType.name} ${model.name} у Києві`,
     description: `${repairType.name} ${model.name}: швидко, якісно, з гарантією. Діагностика безкоштовно.`,
-  }
+    path: `/remont/${slug}/${mfrSlug}/${modelSlug}/${serviceSlug}`,
+  })
 }
 
 export default async function ServicePage({
@@ -160,8 +163,20 @@ export default async function ServicePage({
     getRelatedServices(catSlug, repairType.id),
   ])
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://helloservice.ua'
+
   return (
     <div className="bg-[#f2f2f2]">
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: `${repairType.name} ${model.name}`,
+        description: repairType.description ?? `${repairType.name} ${model.name} у Києві`,
+        provider: { '@type': 'LocalBusiness', name: 'HelloService', url: SITE_URL },
+        areaServed: { '@type': 'City', name: 'Київ' },
+        ...(price ? { offers: { '@type': 'Offer', priceCurrency: 'UAH', price: String(price) } } : {}),
+        ...(repairType.repair_time_hours ? { duration: `PT${repairType.repair_time_hours}H` } : {}),
+      }} />
 
       {/* ── Hero: image + details ── */}
       <section className="bg-white">

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
@@ -36,10 +37,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const post = await getPost(slug)
-  return {
-    title: post?.meta_title ?? (post ? `${post.title} | HelloService Blog` : ''),
-    description: post?.meta_desc ?? post?.excerpt ?? undefined,
-  }
+  if (!post) return {}
+  return buildMeta({
+    title: post.meta_title ?? `${post.title} | HelloService Blog`,
+    description: post.meta_desc ?? post.excerpt ?? undefined,
+    path: `/blog/${slug}`,
+  })
 }
 
 export default async function BlogPostPage({

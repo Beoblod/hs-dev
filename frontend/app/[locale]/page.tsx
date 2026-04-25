@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
@@ -7,11 +8,13 @@ import { ReviewsCarousel } from '@/app/components/ReviewsCarousel'
 import { OrderForm } from '@/app/components/OrderForm'
 import { BenefitsSection } from '@/app/components/BenefitsSection'
 import { BeforeAfterSlider } from '@/app/components/BeforeAfterSlider'
+import { JsonLd } from '@/app/components/JsonLd'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMeta({
   title: 'HelloService — Ремонт телефонів та гаджетів у Києві',
   description: 'Ремонт смартфонів, ноутбуків, планшетів та інших гаджетів. Діагностика безкоштовно. Гарантія на всі роботи.',
-}
+  path: '/',
+})
 
 type DeviceCategory = {
   id: number
@@ -38,6 +41,25 @@ export default async function HomePage({
 
   return (
     <div>
+      <JsonLd data={{
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: 'HelloService',
+        description: 'Ремонт телефонів, ноутбуків та планшетів у Києві',
+        url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://helloservice.ua',
+        telephone: '+380000000000',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Київ',
+          addressCountry: 'UA',
+        },
+        priceRange: '₴₴',
+        openingHours: 'Mo-Su 09:00-21:00',
+        sameAs: [
+          'https://instagram.com/helloservice',
+          'https://tiktok.com/@helloservice',
+        ],
+      }} />
       {/* ── Hero ── */}
       <section className="bg-white">
         <div className="max-w-[1300px] mx-auto px-4 py-20 lg:py-28">

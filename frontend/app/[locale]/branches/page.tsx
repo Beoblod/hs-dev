@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
@@ -20,10 +21,11 @@ type Branch = {
   sort_order: number
 }
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMeta({
   title: 'Відділення HelloService — адреси та контакти',
   description: 'Знайдіть найближче відділення HelloService у Києві. Адреси, телефони, графік роботи та маршрути.',
-}
+  path: '/branches',
+})
 
 export default async function BranchesPage() {
   const t = await getTranslations('branches')

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { directusServer as directus } from '@/lib/directus-server'
@@ -7,10 +8,11 @@ import { OrderForm } from '@/app/components/OrderForm'
 import { WorkStages } from '@/app/components/WorkStages'
 import { BenefitsSection } from '@/app/components/BenefitsSection'
 
-export const metadata: Metadata = {
-  title: 'Ремонт телефонів та гаджетів — HelloService',
+export const metadata: Metadata = buildMeta({
+  title: 'Ремонт телефонів та гаджетів',
   description: 'Ремонт смартфонів, ноутбуків, планшетів та інших гаджетів у Києві. Швидко, якісно, з гарантією.',
-}
+  path: '/remont',
+})
 
 type DeviceCategory = {
   id: number

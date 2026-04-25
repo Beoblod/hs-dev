@@ -16,8 +16,18 @@ const geologica = Geologica({
 })
 
 export const metadata: Metadata = {
-  title: 'HelloService',
-  description: 'Ремонт телефонів та гаджетів у Києві',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://helloservice.ua'),
+  title: {
+    template: '%s | HelloService',
+    default: 'HelloService — Ремонт телефонів та гаджетів у Києві',
+  },
+  description: 'Ремонт телефонів, ноутбуків та планшетів у Києві. Безкоштовна діагностика, гарантія на роботи.',
+  openGraph: {
+    siteName: 'HelloService',
+    locale: 'uk_UA',
+    type: 'website',
+  },
+  twitter: { card: 'summary_large_image' },
 }
 
 export default async function LocaleLayout({

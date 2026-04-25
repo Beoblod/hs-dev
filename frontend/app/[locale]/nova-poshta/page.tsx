@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
@@ -6,10 +7,11 @@ import { InfoPageLayout } from '@/app/components/InfoPageLayout'
 import { FaqAccordion } from '@/app/components/FaqAccordion'
 import { OrderForm } from '@/app/components/OrderForm'
 
-export const metadata: Metadata = {
-  title: 'Ремонт Новою Поштою | HelloService',
+export const metadata: Metadata = buildMeta({
+  title: 'Ремонт Новою Поштою',
   description: 'Відправте пристрій на ремонт через Нову Пошту з будь-якого міста України.',
-}
+  path: '/nova-poshta',
+})
 
 type Step = { id: string; title: string; description: string; sort_order: number }
 type FaqItem = { id: string; question: string; answer: string; sort_order: number }

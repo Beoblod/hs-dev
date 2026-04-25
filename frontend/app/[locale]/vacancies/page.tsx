@@ -1,14 +1,16 @@
 import type { Metadata } from 'next'
+import { buildMeta } from '@/lib/metadata'
 import { getTranslations } from 'next-intl/server'
 import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
 import { Breadcrumb } from '@/app/components/Breadcrumb'
 import { OrderForm } from '@/app/components/OrderForm'
 
-export const metadata: Metadata = {
-  title: 'Вакансії | HelloService',
+export const metadata: Metadata = buildMeta({
+  title: 'Вакансії',
   description: 'Відкриті вакансії в HelloService. Приєднуйтесь до нашої команди.',
-}
+  path: '/vacancies',
+})
 
 type Vacancy = {
   id: string
