@@ -62,12 +62,14 @@
     "title": "Де можна провести ремонт",
     "filterCity": "Фільтр відділень по місту",
     "allCities": "Всі міста",
+    "branchCount": "відділень",
+    "mapTitle": "Наші відділення на карті",
     "phone": "Телефон",
     "address": "Адреса",
     "hours": "Графік роботи",
     "directionsWalk": "Пішки",
-    "directionsTransit": "Громадський транспорт",
-    "directionsCar": "Автівка"
+    "directionsTransit": "Транспорт",
+    "directionsCar": "Авто"
   },
   "footer": {
     "clientsTitle": "Клієнтам",

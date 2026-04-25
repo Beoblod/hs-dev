@@ -62,12 +62,14 @@
     "title": "Where to get a repair",
     "filterCity": "Filter by city",
     "allCities": "All cities",
+    "branchCount": "branches",
+    "mapTitle": "Our branches on the map",
     "phone": "Phone",
     "address": "Address",
     "hours": "Working hours",
-    "directionsWalk": "Walking",
-    "directionsTransit": "Public transit",
-    "directionsCar": "By car"
+    "directionsWalk": "Walk",
+    "directionsTransit": "Transit",
+    "directionsCar": "Car"
   },
   "footer": {
     "clientsTitle": "For clients",
