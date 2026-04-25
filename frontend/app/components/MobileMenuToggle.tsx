@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Link } from '@/i18n/navigation'
 import { LocaleSwitcher } from './LocaleSwitcher'
+import { CityPinIcon } from './icons'
 
 type Props = {
   repairLabel: string
@@ -52,7 +53,7 @@ export function MobileMenuToggle({
             {/* City + language at bottom */}
             <div className="flex items-center justify-between py-4 mt-1">
               <span className="flex items-center gap-1.5 text-[14px] font-light text-zinc-500">
-                <CityIcon /> {cityLabel}
+                <CityPinIcon size={15} /> {cityLabel}
               </span>
               <LocaleSwitcher />
             </div>
@@ -83,10 +84,3 @@ function MobileLink({
   )
 }
 
-function CityIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="3" y="8" width="10" height="13" /><rect x="13" y="3" width="8" height="18" />
-    </svg>
-  )
-}

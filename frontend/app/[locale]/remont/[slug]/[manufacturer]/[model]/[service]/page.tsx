@@ -6,6 +6,7 @@ import { directusServer as directus } from '@/lib/directus-server'
 import { readItems } from '@directus/sdk'
 import { Breadcrumb } from '@/app/components/Breadcrumb'
 import { OrderForm } from '@/app/components/OrderForm'
+import { TimeIcon, CheckIcon, SearchIcon } from '@/app/components/icons'
 
 type RepairType = {
   id: string
@@ -160,7 +161,7 @@ export default async function ServicePage({
 
               {repairType.repair_time_hours && (
                 <p className="flex items-center gap-2 text-[15px] font-light text-zinc-500">
-                  <ClockIcon />
+                  <TimeIcon size={16} className="text-zinc-400 shrink-0" />
                   {t('timeFrom')} {repairType.repair_time_hours} {t('timeHours')}
                 </p>
               )}
@@ -189,13 +190,13 @@ export default async function ServicePage({
 
               {price && (
                 <p className="flex items-center gap-2 text-[14px] font-light text-zinc-500">
-                  <CheckIcon />
+                  <CheckIcon size={16} className="text-[#24b383] shrink-0" />
                   {t('partsIncluded')}
                 </p>
               )}
 
               <p className="flex items-center gap-2 text-[14px] font-light text-[#24b383]">
-                <DiagIcon />
+                <SearchIcon size={16} className="shrink-0" />
                 {t('diagFree')}
               </p>
             </div>
@@ -283,26 +284,3 @@ function PlaceholderIconSm() {
   )
 }
 
-function ClockIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function CheckIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#24b383" strokeWidth="2">
-      <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function DiagIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" strokeLinecap="round" />
-    </svg>
-  )
-}
