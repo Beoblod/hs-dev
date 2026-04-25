@@ -46,6 +46,16 @@
     "bookRepair": "Book a repair",
     "repairInCity": "in Kyiv"
   },
+  "infoPages": {
+    "faqTitle": "Frequently asked questions",
+    "readMore": "Read more",
+    "publishedAt": "Published",
+    "applyBtn": "Apply",
+    "requirements": "Requirements",
+    "noVacancies": "No open vacancies at the moment",
+    "noPosts": "No posts yet",
+    "backToBlog": "← All articles"
+  },
   "workStages": {
     "title": "How we work",
     "step1Title": "Book a repair",

@@ -43,9 +43,7 @@ export function MobileMenuToggle({
             <MobileLink href="/remont" onClick={close}>{repairLabel}</MobileLink>
             <MobileLink href="/branches" onClick={close}>{bookLabel}</MobileLink>
             <MobileLink href="/branches" onClick={close}>{branchesLabel}</MobileLink>
-            <a href="#" onClick={close} className="text-[15px] font-light text-[#1a1a1a] py-3 border-b border-zinc-100 hover:text-[#24b383] transition-colors">
-              {novaPoshtaLabel}
-            </a>
+            <MobileLink href="/nova-poshta" onClick={close}>{novaPoshtaLabel}</MobileLink>
             <a href="#" onClick={close} className="text-[15px] font-light text-[#1a1a1a] py-3 border-b border-zinc-100 hover:text-[#24b383] transition-colors">
               {courierLabel}
             </a>
@@ -69,7 +67,7 @@ function MobileLink({
   onClick,
   children,
 }: {
-  href: '/remont' | '/branches'
+  href: '/remont' | '/branches' | '/nova-poshta'
   onClick: () => void
   children: React.ReactNode
 }) {

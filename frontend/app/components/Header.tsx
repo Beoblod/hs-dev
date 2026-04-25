@@ -26,7 +26,7 @@ export async function Header() {
           <NavItem href="/remont"><>{t('repair')} <ToolsIcon size={14} /></></NavItem>
           <NavItem href="/branches"><>{t('book')} <EditIcon size={14} /></></NavItem>
           <NavItem href="/branches"><>{t('branches')} <BuildingIcon size={14} /></></NavItem>
-          <NavItem href="#"><>{t('novaPoshta')} <NpIcon /></></NavItem>
+          <NavItem href="/nova-poshta"><>{t('novaPoshta')} <NpIcon /></></NavItem>
           <NavItem href="#"><>{t('courier')} <RidingIcon size={14} /></></NavItem>
           <NavItem href="#"><>{t('search')} <SearchIcon size={14} /></></NavItem>
         </nav>

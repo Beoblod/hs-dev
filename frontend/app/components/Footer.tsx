@@ -16,20 +16,20 @@ export async function Footer() {
             <div>
               <SectionTitle icon={<UserIcon />}>{t('clientsTitle')}</SectionTitle>
               <ul>
-                <Item label={t('blog')} icon={<BlogIcon />} />
-                <Item label={t('guarantee')} icon={<ShieldIcon />} />
-                <Item label={t('guide')} icon={<BookIcon />} />
-                <Item label={t('specialOffers')} icon={<TagIcon />} />
-                <Item label={t('publicOffer')} icon={<DocIcon />} />
+                <Item label={t('blog')} href="/blog" icon={<BlogIcon />} />
+                <Item label={t('guarantee')} href="/guarantee" icon={<ShieldIcon />} />
+                <Item label={t('guide')} href="/guide" icon={<BookIcon />} />
+                <Item label={t('specialOffers')} href="/special-offers" icon={<TagIcon />} />
+                <Item label={t('publicOffer')} href="/public-offer" icon={<DocIcon />} />
               </ul>
             </div>
             <div>
               <SectionTitle icon={<InfoIcon />}>{t('contactTitle')}</SectionTitle>
               <ul>
                 <Item label={t('branches')} href="/branches" icon={<MapIcon />} />
-                <Item label={t('corporate')} icon={<UserIcon />} />
-                <Item label={t('suppliers')} icon={<BoxIcon />} />
-                <Item label={t('vacancies')} icon={<BriefcaseIcon />} />
+                <Item label={t('corporate')} href="/corporate" icon={<UserIcon />} />
+                <Item label={t('suppliers')} href="/suppliers" icon={<BoxIcon />} />
+                <Item label={t('vacancies')} href="/vacancies" icon={<BriefcaseIcon />} />
               </ul>
             </div>
           </div>
@@ -52,7 +52,7 @@ export async function Footer() {
             <SectionTitle icon={<SettingsIcon />}>{t('servicesTitle')}</SectionTitle>
             <ul>
               <Item label={t('bookService')} href="/branches" icon={<EditIcon />} />
-              <Item label={t('novaPoshtaRepair')} icon={<NpIcon />} />
+              <Item label={t('novaPoshtaRepair')} href="/nova-poshta" icon={<NpIcon />} />
               <Item label={t('courierService')} icon={<BikeIcon />} />
               <Item label={t('trackStatus')} icon={<TrackIcon />} />
             </ul>

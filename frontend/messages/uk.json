@@ -46,6 +46,16 @@
     "bookRepair": "Записатися на ремонт",
     "repairInCity": "у Києві"
   },
+  "infoPages": {
+    "faqTitle": "Часті запитання",
+    "readMore": "Читати далі",
+    "publishedAt": "Опубліковано",
+    "applyBtn": "Відгукнутись",
+    "requirements": "Вимоги",
+    "noVacancies": "Наразі відкритих вакансій немає",
+    "noPosts": "Статей поки немає",
+    "backToBlog": "← Усі статті"
+  },
   "workStages": {
     "title": "Як ми працюємо",
     "step1Title": "Запис на ремонт",
