@@ -22,15 +22,15 @@ type CatalogEntry = {
   effective_price: number | null
 }
 
-type QualityPrice = {
+type RepairVariant = {
   id: string
   effective_price: string | number | null
   warranty_months: number | null
-  sort_order: number | null
   quality_type_id: {
     id: string
     name: string
     description: string | null
+    sort_order: number | null
   }
 }
 
@@ -103,19 +103,23 @@ async function getManufacturerName(slug: string): Promise<string | null> {
   return rows[0]?.name ?? null
 }
 
-async function getQualityPrices(modelId: string, repairTypeId: string): Promise<QualityPrice[]> {
+async function getQualityPrices(modelId: string, repairTypeId: string): Promise<RepairVariant[]> {
   return directus.request(
-    readItems('repair_quality_prices' as any, {
+    readItems('repair_variants' as any, {
       filter: {
-        model_id: { _eq: modelId },
-        repair_type_id: { _eq: repairTypeId },
+        catalog_id: {
+          model_id: { _eq: modelId },
+          repair_type_id: { _eq: repairTypeId },
+          is_available: { _eq: true },
+        },
         is_available: { _eq: true },
       },
-      fields: ['id', 'effective_price', 'warranty_months', 'sort_order',
-               'quality_type_id.id', 'quality_type_id.name', 'quality_type_id.description'],
-      sort: ['sort_order'],
+      fields: ['id', 'effective_price', 'warranty_months',
+               'quality_type_id.id', 'quality_type_id.name',
+               'quality_type_id.description', 'quality_type_id.sort_order'],
+      sort: ['quality_type_id.sort_order'],
     })
-  ) as Promise<QualityPrice[]>
+  ) as Promise<RepairVariant[]>
 }
 
 async function getRelatedServices(categorySlug: string, currentServiceId: string): Promise<RepairType[]> {
