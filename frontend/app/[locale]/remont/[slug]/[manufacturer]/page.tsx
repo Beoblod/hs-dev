@@ -26,7 +26,7 @@ type DeviceModel = {
   id: string
   name: string
   slug: string
-  brand_line: string | null
+  brand_line_id: { name: string } | null
   is_premium: boolean
   sort: number
 }
@@ -62,7 +62,7 @@ async function getModels(categoryId: number, manufacturerId: string): Promise<De
         manufacturer_id: { _eq: manufacturerId },
         is_active: { _eq: true },
       },
-      fields: ['id', 'name', 'slug', 'brand_line', 'is_premium'],
+      fields: ['id', 'name', 'slug', 'brand_line_id.name', 'is_premium'],
       sort: ['name'],
     })
   ) as Promise<DeviceModel[]>
@@ -103,9 +103,9 @@ export default async function ManufacturerPage({
 
   const models = await getModels(cat.id, mfr.id)
 
-  // Групуємо по brand_line (iPhone, iPad Pro…); null → без групи
+  // Групуємо по brand_line_id.name (iPhone, iPad Pro…); null → без групи
   const groups = models.reduce<Record<string, DeviceModel[]>>((acc, m) => {
-    const key = m.brand_line ?? ''
+    const key = m.brand_line_id?.name ?? ''
     ;(acc[key] ??= []).push(m)
     return acc
   }, {})

@@ -20,7 +20,6 @@ DECLARE
     v_labor_rate       numeric;
     v_hours            numeric;
     v_warranty_rate    numeric;
-    v_warranty_days    integer;
     v_repair_type_id   uuid;
     v_model_id         uuid;
     v_catalog_id       uuid;
@@ -37,13 +36,12 @@ BEGIN
         -- repair_time_hours: model_repair_catalog override → repair_types default → 1
         COALESCE(mc.repair_time_hours, rt.repair_time_hours, 1),
         COALESCE(wr.rate, 0.04),
-        COALESCE(pqt_dummy.warranty_days_default, 90),
         sp.repair_type_id,
         dm.id,
         mc.id
     INTO
         v_reference_price, v_risk_rate, v_labor_rate, v_hours,
-        v_warranty_rate, v_warranty_days,
+        v_warranty_rate,
         v_repair_type_id, v_model_id, v_catalog_id
     FROM spare_parts sp
     JOIN repair_types rt ON rt.id = sp.repair_type_id
@@ -65,11 +63,6 @@ BEGIN
         SELECT rate FROM warranty_reserves
         WHERE category_id = dm.category_id LIMIT 1
     ) wr ON true
-    -- warranty_days: use first part_quality_types record as fallback default
-    LEFT JOIN LATERAL (
-        SELECT warranty_days_default FROM part_quality_types
-        ORDER BY quality_tier DESC LIMIT 1
-    ) pqt_dummy ON true
     WHERE sp.id = p_id;
 
     -- Skip if no reference_price (manual price mode)
@@ -85,7 +78,7 @@ BEGIN
     SET
         calculated_price = v_total,
         effective_price  = v_total,
-        warranty_months  = COALESCE(warranty_months, ROUND(v_warranty_days / 30.0)::integer)
+        warranty_months  = COALESCE(warranty_months, 3)
     WHERE id = p_id;
 
     -- Refresh model_repair_catalog aggregate (від X грн = MIN effective_price)

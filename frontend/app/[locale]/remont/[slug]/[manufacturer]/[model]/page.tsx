@@ -11,7 +11,7 @@ type DeviceModel = {
   id: string
   name: string
   slug: string
-  brand_line: string | null
+  brand_line_id: { name: string } | null
   is_premium: boolean
 }
 
@@ -32,7 +32,7 @@ async function getModel(
         manufacturer_id: { slug: { _eq: mfrSlug } },
         is_active: { _eq: true },
       },
-      fields: ['id', 'name', 'slug', 'brand_line', 'is_premium'],
+      fields: ['id', 'name', 'slug', 'brand_line_id.name', 'is_premium'],
       limit: 1,
     })
   ) as DeviceModel[]
