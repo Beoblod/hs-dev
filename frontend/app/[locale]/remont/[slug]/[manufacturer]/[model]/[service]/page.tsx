@@ -23,10 +23,12 @@ type CatalogEntry = {
 }
 
 type SparePartVariant = {
-  id: string
-  name: string
-  effective_price: string | number | null
-  warranty_months: number | null
+  spare_parts_id: {
+    id: string
+    name: string
+    effective_price: string | number | null
+    warranty_months: number | null
+  }
 }
 
 type DeviceModel = {
@@ -100,16 +102,21 @@ async function getManufacturerName(slug: string): Promise<string | null> {
 
 async function getQualityPrices(modelId: string, repairTypeId: string): Promise<SparePartVariant[]> {
   return directus.request(
-    readItems('spare_parts' as any, {
+    readItems('spare_parts_device_models' as any, {
       filter: {
-        repair_type_id: { _eq: repairTypeId },
-        is_serviceable: { _eq: true },
-        spare_parts_device_models: {
-          device_models_id: { _eq: modelId },
+        device_models_id: { _eq: modelId },
+        spare_parts_id: {
+          repair_type_id: { _eq: repairTypeId },
+          is_serviceable: { _eq: true },
         },
       },
-      fields: ['id', 'name', 'effective_price', 'warranty_months'],
-      sort: ['-effective_price'],
+      fields: [
+        'spare_parts_id.id',
+        'spare_parts_id.name',
+        'spare_parts_id.effective_price',
+        'spare_parts_id.warranty_months',
+      ],
+      sort: ['spare_parts_id.effective_price'],
     })
   ) as Promise<SparePartVariant[]>
 }
@@ -188,7 +195,7 @@ export default async function ServicePage({
   ])
 
   const displayPrice = qualityPrices.length > 0
-    ? Math.min(...qualityPrices.map(q => q.effective_price != null ? Number(q.effective_price) : Infinity).filter(p => isFinite(p)))
+    ? Math.min(...qualityPrices.map(q => q.spare_parts_id.effective_price != null ? Number(q.spare_parts_id.effective_price) : Infinity).filter(p => isFinite(p)))
     : price
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://helloservice.ua'
@@ -245,24 +252,24 @@ export default async function ServicePage({
                   <div className="border border-zinc-100 rounded-lg overflow-hidden">
                     {qualityPrices.map((qp, i) => (
                       <div
-                        key={qp.id}
+                        key={qp.spare_parts_id.id}
                         className={`flex flex-wrap sm:flex-nowrap items-center gap-3 px-4 py-3 ${i > 0 ? 'border-t border-zinc-100' : ''}`}
                       >
                         {/* Name + warranty */}
                         <div className="flex-1 min-w-0">
                           <p className="text-[14px] font-normal text-[#1a1a1a] leading-snug">
-                            {qp.name}
+                            {qp.spare_parts_id.name}
                           </p>
-                          {qp.warranty_months && (
+                          {qp.spare_parts_id.warranty_months && (
                             <p className="text-[12px] font-light text-[#24b383] mt-0.5">
-                              {t('warrantyMonths', { n: qp.warranty_months })}
+                              {t('warrantyMonths', { n: qp.spare_parts_id.warranty_months })}
                             </p>
                           )}
                         </div>
                         {/* Price */}
                         <p className="text-[17px] font-medium text-[#1a1a1a] shrink-0 tabular-nums">
-                          {qp.effective_price != null
-                            ? `${Number(qp.effective_price).toLocaleString('uk-UA')} ₴`
+                          {qp.spare_parts_id.effective_price != null
+                            ? `${Number(qp.spare_parts_id.effective_price).toLocaleString('uk-UA')} ₴`
                             : <span className="text-[14px] font-light text-zinc-400">{t('noPrices')}</span>
                           }
                         </p>
