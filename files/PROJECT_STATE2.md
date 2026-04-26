@@ -7,8 +7,8 @@
 ## Meta
 - **Проект:** Сервісний центр HelloService
 - **ТЗ:** `tz_helloservice_v2.2.docx` (у цьому ж репозиторії)
-- **Поточна фаза:** 2 — Next.js фронтенд
-- **Останнє оновлення:** 2026-04-25 (сесія 4)
+- **Поточна фаза:** 2/3 — Ціноутворення (spare_parts)
+- **Останнє оновлення:** 2026-04-26 (сесія 5)
 
 ## Сервери
 | Роль | Сервер | Деталі |
@@ -46,6 +46,21 @@
 - [x] Snapshot: `schema-snapshots/schema-phase1-complete.json` (312 KB)
 - [x] Роль `Редактор даних` — CRUD на всі 21 колекцію, без доступу до схеми
 - [ ] Translations — відкладено до Фази 5 (EN-поля порожні, UK вже в базових полях)
+
+### Ціноутворення (Phase 4–6)
+- [x] `branches.slug` + `/viddilennya/[slug]` — сторінка відділення з OSM картою
+- [x] `spare_parts` — додані поля: `repair_type_id`, `reference_price`, `calculated_price`, `effective_price`, `is_serviceable`, `warranty_months`
+- [x] `spare_parts_device_models` — M2M junction (spare_part ↔ device_model)
+- [x] `model_repair_catalog.repair_time_hours` — override часу ремонту для моделі
+- [x] PostgreSQL тригер `fn_calc_spare_part` — розраховує effective_price автоматично
+  - Формула: `part_price = reference_price × (1 + risk_rate)`, `labor_adj = labor_rate × hours`, `effective_price = part_price + labor_adj + labor_adj × warranty_rate`
+  - `hours` = COALESCE(model_repair_catalog.repair_time_hours, repair_types.repair_time_hours, 1)
+  - Без novelty_markup_coefficient (Variant A — спрощено)
+  - Cascade тригери на `repair_types` і `model_repair_catalog`
+- [x] Сторінка послуги (`/remont/.../[service]`) відображає варіанти запчастин з цінами
+- [x] `repair_quality_prices`, `repair_variants` — очікують cleanup (дані мігровано)
+- [x] Scripts: `phase4_repair_quality.py`, `phase4_pricing_trigger.py`, `phase5_migrate_to_variants.py`, `phase6_spare_parts_pricing.py`
+- [x] SQL: `pricing_triggers.sql`, `variant_triggers.sql`, `spare_parts_triggers.sql`
 
 ### Next.js (`frontend/`)
 - [x] Проект ініціалізовано (`create-next-app`, Next.js 16, App Router, TypeScript, Tailwind 4)
@@ -100,7 +115,8 @@
 ---
 
 ## В процесі
-- [ ] **Фаза 2:** Next.js фронтенд (ЗАРАЗ)
+- [ ] **Cleanup:** видалити `repair_quality_prices` і `repair_variants` з Directus + PostgreSQL
+- [ ] **Наповнення spare_parts:** додати реальні запчастини через Directus UI (reference_price → auto effective_price)
 
 ### Фаза 2 — Next.js фронтенд (виконано)
 - [x] Ініціалізація проекту (App Router, TypeScript, Tailwind, Geologica font)
@@ -212,7 +228,20 @@
 
 ---
 
-## Формула ціноутворення
+## Формула ціноутворення (Phase 6, поточна)
+```
+part_price      = reference_price × (1 + risk_markup_rate)
+hours           = COALESCE(model_repair_catalog.repair_time_hours, repair_types.repair_time_hours, 1)
+labor_adj       = labor_rate × hours
+warranty_res    = labor_adj × warranty_rate
+effective_price = part_price + labor_adj + warranty_res
+```
+- `reference_price` вноситься вручну в `spare_parts` (довідкова закупівельна ціна)
+- `effective_price` розраховується автоматично тригером `fn_calc_spare_part`
+- Novelty coefficient навмисно виключений (Variant A — спрощення)
+- Фаза 3: `effective_price = MAX(calculated, min_competitor_price)` — після впровадження конкурентного моніторингу
+
+## Формула ціноутворення (оригінальна ТЗ, Фаза 3+)
 ```
 Part_Price   = part_cost × (1 + effective_risk_markup_rate)
 Labor_Adj    = (labor_rate × repair_time_hours × novelty_coef) + secondary_risk_surcharge
