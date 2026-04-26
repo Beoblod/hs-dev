@@ -22,16 +22,11 @@ type CatalogEntry = {
   effective_price: number | null
 }
 
-type RepairVariant = {
+type SparePartVariant = {
   id: string
+  name: string
   effective_price: string | number | null
   warranty_months: number | null
-  quality_type_id: {
-    id: string
-    name: string
-    description: string | null
-    sort_order: number | null
-  }
 }
 
 type DeviceModel = {
@@ -103,23 +98,20 @@ async function getManufacturerName(slug: string): Promise<string | null> {
   return rows[0]?.name ?? null
 }
 
-async function getQualityPrices(modelId: string, repairTypeId: string): Promise<RepairVariant[]> {
+async function getQualityPrices(modelId: string, repairTypeId: string): Promise<SparePartVariant[]> {
   return directus.request(
-    readItems('repair_variants' as any, {
+    readItems('spare_parts' as any, {
       filter: {
-        catalog_id: {
-          model_id: { _eq: modelId },
-          repair_type_id: { _eq: repairTypeId },
-          is_available: { _eq: true },
+        repair_type_id: { _eq: repairTypeId },
+        is_serviceable: { _eq: true },
+        spare_parts_device_models: {
+          device_models_id: { _eq: modelId },
         },
-        is_available: { _eq: true },
       },
-      fields: ['id', 'effective_price', 'warranty_months',
-               'quality_type_id.id', 'quality_type_id.name',
-               'quality_type_id.description', 'quality_type_id.sort_order'],
-      sort: ['quality_type_id.sort_order'],
+      fields: ['id', 'name', 'effective_price', 'warranty_months'],
+      sort: ['-effective_price'],
     })
-  ) as Promise<RepairVariant[]>
+  ) as Promise<SparePartVariant[]>
 }
 
 async function getRelatedServices(categorySlug: string, currentServiceId: string): Promise<RepairType[]> {
@@ -259,13 +251,8 @@ export default async function ServicePage({
                         {/* Name + warranty */}
                         <div className="flex-1 min-w-0">
                           <p className="text-[14px] font-normal text-[#1a1a1a] leading-snug">
-                            {qp.quality_type_id.name}
+                            {qp.name}
                           </p>
-                          {qp.quality_type_id.description && (
-                            <p className="text-[12px] font-light text-zinc-400 mt-0.5 leading-snug">
-                              {qp.quality_type_id.description}
-                            </p>
-                          )}
                           {qp.warranty_months && (
                             <p className="text-[12px] font-light text-[#24b383] mt-0.5">
                               {t('warrantyMonths', { n: qp.warranty_months })}
