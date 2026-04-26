@@ -7,8 +7,8 @@
 ## Meta
 - **Проект:** Сервісний центр HelloService
 - **ТЗ:** `tz_helloservice_v2.2.docx` (у цьому ж репозиторії)
-- **Поточна фаза:** 2/3 — Ціноутворення (spare_parts)
-- **Останнє оновлення:** 2026-04-26 (сесія 5)
+- **Поточна фаза:** 3 — Підготовка до міграції (дизайн + контент + форма)
+- **Останнє оновлення:** 2026-04-26 (сесія 7)
 
 ## Сервери
 | Роль | Сервер | Деталі |
@@ -47,9 +47,9 @@
 - [x] Роль `Редактор даних` — CRUD на всі 21 колекцію, без доступу до схеми
 - [ ] Translations — відкладено до Фази 5 (EN-поля порожні, UK вже в базових полях)
 
-### Ціноутворення (Phase 4–6)
+### Ціноутворення (Phase 4–6) ✓
 - [x] `branches.slug` + `/viddilennya/[slug]` — сторінка відділення з OSM картою
-- [x] `spare_parts` — додані поля: `repair_type_id`, `reference_price`, `calculated_price`, `effective_price`, `is_serviceable`, `warranty_months`
+- [x] `spare_parts` — поля: `repair_type_id`, `reference_price`, `calculated_price`, `effective_price`, `is_serviceable`, `warranty_months`
 - [x] `spare_parts_device_models` — M2M junction (spare_part ↔ device_model)
 - [x] `model_repair_catalog.repair_time_hours` — override часу ремонту для моделі
 - [x] PostgreSQL тригер `fn_calc_spare_part` — розраховує effective_price автоматично
@@ -57,10 +57,22 @@
   - `hours` = COALESCE(model_repair_catalog.repair_time_hours, repair_types.repair_time_hours, 1)
   - Без novelty_markup_coefficient (Variant A — спрощено)
   - Cascade тригери на `repair_types` і `model_repair_catalog`
+- [x] `trg_autocreate_catalog` — при додаванні spare_part до моделі auto-створює model_repair_catalog entry
 - [x] Сторінка послуги (`/remont/.../[service]`) відображає варіанти запчастин з цінами
-- [x] `repair_quality_prices`, `repair_variants` — очікують cleanup (дані мігровано)
-- [x] Scripts: `phase4_repair_quality.py`, `phase4_pricing_trigger.py`, `phase5_migrate_to_variants.py`, `phase6_spare_parts_pricing.py`
-- [x] SQL: `pricing_triggers.sql`, `variant_triggers.sql`, `spare_parts_triggers.sql`
+- [x] `repair_quality_prices`, `repair_variants` — видалено (дані мігровано до spare_parts)
+- [x] `spare_part_risk_overrides`, `repair_type_parts`, `part_quality_types` — видалено (надлишкові)
+- [x] Scripts: `phase6_spare_parts_pricing.py` | SQL: `spare_parts_triggers.sql`, `autocreate_catalog_trigger.sql`
+
+### Directus UI (сесія 6) ✓
+- [x] M2O relations налаштовано для всіх UUID-полів: `device_models.category_id/manufacturer_id`, `model_repair_catalog.model_id/repair_type_id`, `repair_types.part_risk_level_id`, `spare_parts.category_id/repair_type_id`
+- [x] `display_template: "{{name}}"` встановлено на: `device_categories`, `manufacturers`, `device_models`, `repair_types`, `part_risk_levels`, `part_categories`, `brand_lines`
+- [x] `brand_lines` — нова колекція (23 записи). `device_models.brand_line` (string) → `brand_line_id` (M2O FK). Міграція 58 моделей.
+- [x] `device_models.spare_parts` — O2M alias для перегляду запчастин з картки моделі
+- [x] `model_repair_catalog` — unique constraint `(model_id, repair_type_id)`
+- [x] Фронтенд: `brand_line` → `brand_line_id.name` у `[manufacturer]/page.tsx` і `[model]/page.tsx`
+
+### Деплой ✓
+- [x] `/root/helloservice/frontend` → symlink до `/root/helloservice-src/frontend` (єдине джерело коду)
 
 ### Next.js (`frontend/`)
 - [x] Проект ініціалізовано (`create-next-app`, Next.js 16, App Router, TypeScript, Tailwind 4)
@@ -114,9 +126,26 @@
 
 ---
 
-## В процесі
-- [ ] **Cleanup:** видалити `repair_quality_prices` і `repair_variants` з Directus + PostgreSQL
-- [ ] **Наповнення spare_parts:** додати реальні запчастини через Directus UI (reference_price → auto effective_price)
+### Конкурентний моніторинг (сесія 7) ✓ (відкладено до після міграції)
+- [x] `competitor_pages` — нова колекція (competitor_id, model_id, repair_type_id, url, price_selector, is_active) + M2O relations
+- [x] M2O relations виправлено на `competitor_prices` (competitor_id, model_id, repair_type_id)
+- [x] 8 конкурентів засіяно: MasterFix, MasterFon, Samsung Service, ServiceInUA, RobimGood, Jabko, App Lab, Skeleton
+- [x] 8 `competitor_pages` для Samsung Galaxy S25 Ultra × Заміна дисплея (4 active, 4 inactive)
+- [x] n8n workflow "Competitor Price Scraper" (ID: mof4Wo12IVDt96SV) — **INACTIVE**, weekly Mon 9:00
+- [x] PostgreSQL VIEW `v_stale_competitor_prices` — deployed на VPS
+- [x] Статичний API токен для n8n: `hs-n8n-scraper-token-2026` (admin user)
+- [x] Scripts: `phase7_competitor_monitoring.py`, `stale_prices_view.sql`
+- [x] Тест: 4 ціни зібрано (MasterFix 4999 / ServiceInUA 6799 / MasterFon 11950 / Samsung Service 20010 грн)
+- [ ] **Активувати workflow** — натиснути Publish в n8n після міграції
+- [ ] RobimGood selector — Elementor JS-tabs, потребує ручного DevTools інспекту
+- [ ] Jabko / App Lab / Skeleton — знайти URL з цінами або виключити
+
+## В процесі (до міграції домену)
+- [ ] **Дизайн** — відполірувати UI
+- [ ] **Інформаційні сторінки** — заповнити контентом (pages у Directus)
+- [ ] **Форма заявки** — допрацювати
+- [ ] **Контент** — згенерувати для сторінок категорій, моделей, послуг
+- [ ] **Наповнення spare_parts** — додати реальні запчастини (reference_price → auto effective_price)
 
 ### Фаза 2 — Next.js фронтенд (виконано)
 - [x] Ініціалізація проекту (App Router, TypeScript, Tailwind, Geologica font)
@@ -181,15 +210,19 @@
 - Логотипи виробників у картках `/remont` (`#22`)
 - Фото пристроїв на сервісній сторінці (placeholder SVG замість реального фото) (`#23`, `#24`)
 
-### Фаза 3 — Конкурентне ціноутворення та міграція домену
-1. Наповнити `competitors`, `competitor_prices`
-2. n8n: налаштувати Workflows для автопарсингу цін конкурентів (§7 ТЗ)
-3. Directus Flow: перерахунок `effective_price`
-3. Directus Flow: нагадування про застарілі ціни (30/90/180 днів)
-4. Weekly Flow: оновлення `novelty_markup_coefficient`
-5. Daily Flow: Directus API Self-Check
-6. SEO-аудит, підготовка 301-редіректів
-7. Міграція: `dev.helloservice.ua` → `helloservice.ua`
+### Фаза 3 — Конкурентний моніторинг + міграція домену
+1. [x] Розгорнути `competitor_pages`, `competitors`, n8n workflow, PostgreSQL VIEW ✓
+2. [x] Тестовий парсинг: 4 конкуренти × S25 Ultra дисплей ✓
+3. [ ] Відполірувати дизайн
+4. [ ] Заповнити інформаційні сторінки контентом
+5. [ ] Допрацювати форму заявки
+6. [ ] Згенерувати контент для категорій / моделей / послуг
+7. [ ] Наповнити spare_parts реальними reference_price
+8. [ ] Активувати n8n competitor workflow (Publish)
+9. [ ] Directus Flow: нагадування про застарілі ціни (30/90/180 днів)
+10. [ ] Weekly Flow: оновлення `novelty_markup_coefficient`
+11. [ ] SEO-аудит, підготовка 301-редіректів
+12. [ ] Міграція: `dev.helloservice.ua` → `helloservice.ua` (змінити DOMAIN_FRONTEND + NEXT_PUBLIC_SITE_ENV=production)
 
 ### Фаза 4 — Remonline CRM
 1. API-аудит Remonline
@@ -211,7 +244,9 @@
 
 ## Відомі проблеми / Ризики
 - `novelty_markup_coefficient` потребує weekly Flow (не оновлюється само по собі) — ТЗ §13 #1
-- `is_stale` для `competitor_prices` — реалізувати як PostgreSQL VIEW, не STORED column — ТЗ §13 #5
+- `is_stale` для `competitor_prices` — реалізовано як VIEW `v_stale_competitor_prices` ✓
+- RobimGood price selector — Elementor JS-tabs, ціни не в статичному HTML; потребує DevTools інспекту
+- competitor_pages для Jabko / App Lab / Skeleton — inactive, URL з цінами не знайдено
 - Staging середовище відсутнє — рекомендується Docker на тому ж VPS, інший порт — ТЗ §13 #11
 
 ---
